@@ -1,0 +1,20 @@
+@import "tailwindcss"; 
+
+*{
+  
+  box-sizing: border-box;
+
+}
+body{
+  font-family: 'Poppins', sans-serif;
+ 
+}
+.bg-mine{
+  background: #000;
+  background-image: radial-gradient(#ffffff33,1px,#00091d,1px);
+  background-size: 20px 20px;
+}
+.bg-skill{
+  background: #102546;
+}
+

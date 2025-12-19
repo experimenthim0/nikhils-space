@@ -1,0 +1,34 @@
+.heart{
+   width: 20px;
+        height: 20px;
+        position: fixed;
+        pointer-events: none;
+        transform: translate(-40%, -10%);
+        transition: transform 0.1s ease, width 0.1s ease, height 0.1s ease;
+        z-index: 1000;
+}
+@font-face {
+  font-family: 'myfont';
+  src: local('mysans'), url(./fonts/mysans.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'LostTumbler';
+  src: local('LostTumbler'), url(./fonts/LostTumbler.otf) format('opentype');
+}
+@font-face {
+  font-family: 'footerBig';
+  src: local('JosefinSans'), url(./fonts/JosefinSans.ttf) format('truetype');
+}
+
+.modal-title {
+    font-family: LostTumbler, Arial, serif;
+    font-weight: black;
+}
+.myfont {
+    font-family: myfont, Arial, serif;
+    font-weight: black;
+}
+.footerBig {
+    font-family: footerBig, Arial, serif;
+    font-weight: black;
+}
