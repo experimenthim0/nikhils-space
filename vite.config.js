@@ -5,7 +5,9 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-  allowedHosts: true
+    port: 3000,
+    host:true,
+    allowedHosts: 'all',
 }
   
 })

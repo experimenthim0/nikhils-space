@@ -19,6 +19,14 @@
   font-family: 'footerBig';
   src: local('JosefinSans'), url(./fonts/JosefinSans.ttf) format('truetype');
 }
+@font-face {
+  font-family: calmfont;
+ src: local('OddlyCalmingRegular'), url(./fonts/OddlyCalmingRegular-7B89V.ttf) format('truetype');
+}
+.calmfont{
+    font-family: calmfont, Arial, serif;
+    font-weight: black;
+}
 
 .modal-title {
     font-family: LostTumbler, Arial, serif;
@@ -31,4 +39,29 @@
 .footerBig {
     font-family: footerBig, Arial, serif;
     font-weight: black;
+}
+
+/*
+Source - https://stackoverflow.com/a
+Posted by bookcasey
+Retrieved 2025-12-31, License - CC BY-SA 3.0
+*/
+
+.string{
+  -webkit-transform-origin:50% 0%;
+  -webkit-animation: rotate 2s infinite ease-in-out;
+}
+
+@-webkit-keyframes rotate {
+  0% {
+        -webkit-transform: rotate(-15deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(15deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(-15deg);
+    }
 }
