@@ -65,3 +65,33 @@ Retrieved 2025-12-31, License - CC BY-SA 3.0
         -webkit-transform: rotate(-15deg);
     }
 }
+
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-500px) rotate(30deg) scale(1.5);
+  }
+}
+
+.animate-float-heart {
+  animation: floatUp 3s ease-out forwards;
+}
+
+
+.rope {
+  background: repeating-linear-gradient(
+    135deg,
+    #8b5a2b,
+    #8b5a2b 6px,
+    #a67c52 6px,
+    #a67c52 12px
+  );
+}

@@ -11,6 +11,7 @@ export default {
         'background-shine': 'background-shine 2s linear infinite',
         'pulse-slow': 'pulse 6s infinite cubic-bezier(0.4, 0, 0.6, 1)',
         'border-width': 'border-width 3s infinite alternate',
+        'floating-heart': 'float 6s linear infinite',
       },
       keyframes: {
         'text-gradient': {
@@ -25,6 +26,12 @@ export default {
         'border-width': {
           from: { width: '10px', opacity: '0' },
           to: { width: '100px', opacity: '1' },
+        },
+
+        float: {
+          '0%': { transform: 'translateY(0) scale(1)', opacity: '0' },
+          '10%': { opacity: '1' },
+          '100%': { transform: 'translateY(-100vh) scale(1.5)', opacity: '0' },
         },
       },
     },
