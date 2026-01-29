@@ -4,7 +4,7 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
   ],
- server: { port: 3000, host: true, allowedHosts: ['unadventurous-warehouse.outray.app']
+ server: { port: 3000, host: true, allowedHosts: ['arrogant-nun.outray.app']
  }
   
 })

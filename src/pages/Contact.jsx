@@ -32,9 +32,9 @@ const onHCaptchaChange = (token) => {
   
 
 
-<div class="flex items-center min-h-screen ">
+<div class="flex items-center min-h-screen px-6">
   <div class="container mx-auto">
-    <div class="max-w-md mx-auto my-10 bg-gray-800 p-5 rounded-md shadow-sm">
+    <div class="max-w-md mx-auto my-10 bg-gray-800 p-1 rounded-md shadow-sm">
       <div class="text-center">
         <h1 class="my-3 text-3xl font-semibold text-gray-100">
           Reach Out to Me
@@ -65,7 +65,7 @@ const onHCaptchaChange = (token) => {
             <textarea rows="5" name="message" id="message" placeholder="Express your words here" class="w-full px-3 py-2 rounded-sm placeholder-gray-500 text-gray-900 bg-gray-100 text-sm focus:outline-none" required></textarea>
           </div>
           <div class="mb-6">
-            <button type="submit" class="w-full bg-indigo-600 inline-block text-white no-underline hover:text-indigo-100 py-4 px-4 rounded-sm focus:outline-none">
+            <button type="submit" class="w-full bg-blue-800 inline-block text-white no-underline hover:text-indigo-100 py-4 px-4 rounded-sm focus:outline-none">
               Send Message
             </button>
           </div>

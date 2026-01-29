@@ -59,9 +59,9 @@ function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#000000e9] w-full overflow-x-hidden">
+    <div className="min-h-screen bg-neutral-900 w-full overflow-x-hidden">
       {showAlert && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-500 text-white px-3 py-2 rounded shadow-lg z-50 flex items-center justify-between w-90 sm:w-190 max-w-md">
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-3 py-2 rounded shadow-lg z-50 flex items-center justify-between w-90 sm:w-190 max-w-md">
           Hi! You can Switch Language between English and Rajasthani using the
           EN & RJ button at the top.
           <button
@@ -73,7 +73,7 @@ function Home() {
         </div>
       )}
 
-      <div className="w-full bg-[#000000e9] myfont">
+      <div className="w-full bg-neutral-900 myfont">
         <div className="flex justify-center w-full pt-5 text-white">
           <label className="themeSwitcherTwo shadow-card relative inline-flex cursor-pointer select-none items-center justify-center rounded-md bg-black p-1">
             <input
@@ -123,7 +123,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="flex justify-center items-center bg-[#000000e9]">
+        <div className="flex justify-center items-center bg-neutral-900">
           <h2 className="font-bold text-3xl text-white text-center mb-5">
             {t.aboutText}
             <span className="max-w-14 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1/2 block"></span>
@@ -363,15 +363,25 @@ function Home() {
           <RiMapPin2Line size={18} />
           <p>Chomu, Jaipur, Rajasthan.</p>
         </div>
-        <div className="border border-gray-300 m-8 py-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg">
 
-          <p className="text-center text-xl font-bold text-white mb-3 tracking-wide">Music Space</p>
-        <div class=" flex justify-center items-center flex-row gap-2 px-2 py-2">
+
+
+         <ContactForm/>
+
+
+
+
+        <div className="flex items-center my-10">
+        <div className=" max-w-md mx-auto border border-gray-300 m-8 py-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg  my-10">
+
+          <p className="text-center text-xl font-bold text-white mb-3 tracking-wide">Music Space </p>
+          <span className="max-w-81 h-0.5 bg-gray-300 z-20 absolute left-0 right-0 mx-auto -mt-1/2  block"></span>
+        <div class=" flex justify-center items-center flex-row gap-2 px-2 pt-4 ">
           <img
             id="album"
-            src=""
+            
             alt="Album Cover"
-            class="w-13 h-13 animate-spin [animation-duration:3s] rounded-full border-2 border-gray-400 shadow-md"
+            class="w-13 h-13  rounded-full border-2 border-gray-400 shadow-md"
           />
           <div class="">
             <p id="track" class="font-semibold text-[17px] truncate w-50 text-white">
@@ -380,17 +390,19 @@ function Home() {
             <p id="artist"></p>
             <p class="text-xs font-semibold text-gray-400 tracking-wide" id="playing">
 
-              Him Music <span className="text-red-700"> • Offline </span>
+              Nikhim Music <span className="text-red-700"> • Offline </span>
             </p>
           </div>
         </div>
         </div>
+        </div>
+       
 
 
 
-        <ContactForm/>
+       
 
-        <div className="relative w-full h-auto  overflow-hidden bg-[#000000e9]">
+        <div className="relative w-full h-auto  overflow-hidden bg-neutral-900">
           <p className=" -mb-5 sm:-mb-20 text-[13vw] -ml-5 font-extrabold footerBig text-white whitespace-nowrap tracking-widest uppercase select-none text-center  ">
             Nikhil Yadav
           </p>

@@ -43,6 +43,7 @@ document.getElementById("album").src = img;
 
 
     if (track["@attr"]?.nowplaying) {
+      document.getElementById("album").classList="animate-spin [animation-duration:3s] w-13 h-13 rounded-full border-2 border-gray-400 shadow-md"
   document.getElementById("playing").innerHTML =
     `<p class="text-gray-400">Now Listening  <span class="text-green-600">• Online <span>  </p>`
 }
