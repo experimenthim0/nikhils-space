@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Route, Routes, Router, Link } from "react-router-dom";
 import "../App.css";
 
+import ContactForm from "./Contact.jsx"
+
 import React from "react";
 import translations from "../js/translation.js";
 import {
@@ -377,11 +379,16 @@ function Home() {
             </p>
             <p id="artist"></p>
             <p class="text-xs font-semibold text-gray-400 tracking-wide" id="playing">
-              Him Music
+
+              Him Music <span className="text-red-700"> • Offline </span>
             </p>
           </div>
         </div>
         </div>
+
+
+
+        <ContactForm/>
 
         <div className="relative w-full h-auto  overflow-hidden bg-[#000000e9]">
           <p className=" -mb-5 sm:-mb-20 text-[13vw] -ml-5 font-extrabold footerBig text-white whitespace-nowrap tracking-widest uppercase select-none text-center  ">
