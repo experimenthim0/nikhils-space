@@ -4,14 +4,29 @@ import "../App.css";
 
 import React from "react";
 import translations from "../js/translation.js";
-import { RiLinkedinFill, RiTwitterXLine, RiGithubLine, RiP2pLine, RiMailLine, RiMapPin2Line, RiDiscordLine, RiEarthLine, RiChatSmile2Line } from "@remixicon/react";
-
+import {
+  RiLinkedinFill,
+  RiTwitterXLine,
+  RiGithubLine,
+  RiP2pLine,
+  RiMailLine,
+  RiMapPin2Line,
+  RiDiscordLine,
+  RiEarthLine,
+  RiChatSmile2Line,
+} from "@remixicon/react";
+import getRecentTrack from "../js/musicplayer.js";
 function Home() {
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     document.title = `Nikhil Yadav`;
   }, []);
+
+  useEffect(() => {
+    getRecentTrack();
+    setInterval(getRecentTrack, 10000);
+  });
 
   useEffect(() => {
     setShowAlert(true);
@@ -32,19 +47,21 @@ function Home() {
 
   const t = translations[language];
 
-  const project=[
-    {name:"Ai&Code Way",
-        link:"https://aiandcodeway.netlify.app/",
-        description:"A platform to explore AI tools and coding resources.",
-        imgsrc:"/images/aincode.png"
-    }
-  ]
+  const project = [
+    {
+      name: "Ai&Code Way",
+      link: "https://aiandcodeway.netlify.app/",
+      description: "A platform to explore AI tools and coding resources.",
+      imgsrc: "/images/aincode.png",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#000000e9] w-full overflow-x-hidden">
       {showAlert && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-500 text-white px-3 py-2 rounded shadow-lg z-50 flex items-center justify-between w-90 sm:w-190 max-w-md">
-          Hi! You can Switch Language between English and Rajasthani using the EN & RJ button at the top.
+          Hi! You can Switch Language between English and Rajasthani using the
+          EN & RJ button at the top.
           <button
             className="ml-4 text-white font-bold"
             onClick={() => setShowAlert(false)}
@@ -93,7 +110,11 @@ function Home() {
           <div className="w-45 h-15 text-white relative inline-block overflow-hidden rounded-full p-[2px] mt-10">
             <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FFFFFF_0%,#2563EB_50%,#FFFFFF_100%)]" />
             <div className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 px-3 py-1 text-2xl font-semibold text-gray-50 backdrop-blur-3xl hover:bg-gray-700">
-              <a href="https://www.linkedin.com/in/nikhil0148" target="_blank" className="flex gap-1 text-[20px] items-center hover:bg-gray-700">
+              <a
+                href="https://www.linkedin.com/in/nikhil0148"
+                target="_blank"
+                className="flex gap-1 text-[20px] items-center hover:bg-gray-700"
+              >
                 Let's Connect
               </a>
             </div>
@@ -129,19 +150,31 @@ function Home() {
             <span className="max-w-17 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1 block"></span>
             <p className="text-[14px] text-gray-400 mt-3">({t.process})</p>
           </h2>
-</div>
+        </div>
         <div className="flex justify-center items-center gap-10 flex-wrap mb-10">
           {project.map((proj, index) => (
-            <div key={index} className="bg-gray-800 bg-opacity-50 rounded-lg p-6 m-4 shadow-lg w-80 hover:scale-105 transform transition-transform duration-300 ease-in-out">
-              <img src={proj.imgsrc} alt={proj.name} className="w-full h-40 object-cover rounded-md mb-4" />
-              <h3 className="text-xl font-semibold mb-2 text-white">{proj.name}</h3>
+            <div
+              key={index}
+              className="bg-gray-800 bg-opacity-50 rounded-lg p-6 m-4 shadow-lg w-80 hover:scale-105 transform transition-transform duration-300 ease-in-out"
+            >
+              <img
+                src={proj.imgsrc}
+                alt={proj.name}
+                className="w-full h-40 object-cover rounded-md mb-4"
+              />
+              <h3 className="text-xl font-semibold mb-2 text-white">
+                {proj.name}
+              </h3>
               <p className="text-gray-300 mb-4">{proj.description}</p>
-              <a href={proj.link} target="_blank" className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full  hover:bg-blue-700 transition-colors duration-300 ease-in-out">
+              <a
+                href={proj.link}
+                target="_blank"
+                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full  hover:bg-blue-700 transition-colors duration-300 ease-in-out"
+              >
                 See More
               </a>
             </div>
           ))}
-        
         </div>
 
         <div className="flex justify-center items-center">
@@ -256,59 +289,68 @@ function Home() {
           <h2 className="font-bold text-3xl text-white text-center mb-5">
             {t.contact}
             <span className="max-w-14 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1/2 block"></span>
-            <p className="text-[18px] text-gray-400 mt-2">
-              {t.contacttext}
-            </p>
+            <p className="text-[18px] text-gray-400 mt-2">{t.contacttext}</p>
           </h2>
         </div>
 
-        <div className="w-full flex justify-center items-center flex-col text-white mt-2 gap-2 mb-10">
-          <div className="inline-flex px-8 h-10 gap-1 items-center justify-center bg-white text-black py-1.5 rounded-full text-[18px] font-medium hover:text-black-500 hover:bg-gray-100/80 cursor-pointer" onClick={() => window.open('https://duochatapp.netlify.app/', '_blank')}>
+        {/* <div className="w-full flex justify-center items-center flex-col text-white mt-2 gap-2 mb-10">
+          <div
+            className="inline-flex px-8 h-10 gap-1 items-center justify-center bg-white text-black py-1.5 rounded-full text-[18px] font-medium hover:text-black-500 hover:bg-gray-100/80 cursor-pointer"
+            onClick={() =>
+              window.open("https://duochatapp.netlify.app/", "_blank")
+            }
+          >
             <RiChatSmile2Line size={20} />
             <p>ChatWithMe</p>
           </div>
           <p className="text-gray-400 text-[14px]">Time : 12:00 PM - 8:00 PM</p>
-        </div>
+        </div> */}
 
         <div className="flex justify-center items-center gap-5 flex-wrap">
           <a
             className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
-            href="https://www.linkedin.com/in/nikhil0148" target="_blank"
+            href="https://www.linkedin.com/in/nikhil0148"
+            target="_blank"
           >
             <RiLinkedinFill size="14px" />
             LinkedIn
           </a>
           <a
             className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
-            href="https://twitter.com/nikhil0148" target="_blank"
+            href="https://twitter.com/nikhil0148"
+            target="_blank"
           >
             <RiTwitterXLine size="14px" />
             Twitter(X)
           </a>
           <a
             className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
-            href="https://github.com/nikhilydv0148" target="_blank"
+            href="https://github.com/nikhilydv0148"
+            target="_blank"
           >
             <RiGithubLine size="14px" />
             GitHub
           </a>
           <a
             className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
-            href="https://peerlist.io/nikhil0148" target="_blank"
+            href="https://peerlist.io/nikhil0148"
+            target="_blank"
           >
             <RiP2pLine size="14px" />
             Peerlist
           </a>
           <a
             className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
-            href="https://discord.gg/WKejKbMJ" target="_blank"
+            href="https://discord.gg/WKejKbMJ"
+            target="_blank"
           >
             <RiDiscordLine size="14px" />
             Discord
           </a>
           <a
             className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
-            href="mailto:contact.nikhim@gmail.com" target="_blank"
+            href="mailto:contact.nikhim@gmail.com"
+            target="_blank"
           >
             <RiMailLine size="14px" />
             Email
@@ -318,7 +360,25 @@ function Home() {
         <div className="w-full flex justify-center items-center text-white mt-2 gap-2 mb-4">
           <RiMapPin2Line size={18} />
           <p>Chomu, Jaipur, Rajasthan.</p>
-            </div>
+        </div>
+          <p className="text-center text-xl font-semibold text-white">Now Playing</p>
+        <div class=" flex justify-center items-center flex-row gap-2 px-2 py-2">
+          <img
+            id="album"
+            src=""
+            alt="Album Cover"
+            class="w-12 h-12 animate-spin [animation-duration:3s] rounded-full"
+          />
+          <div class="">
+            <p id="track" class="font-semibold text-md truncate w-50 text-white">
+              Loading...
+            </p>
+            <p id="artist"></p>
+            <p class="text-xs font-semibold text-gray-400" id="playing">
+              Him Music
+            </p>
+          </div>
+        </div>
 
         <div className="relative w-full h-auto  overflow-hidden bg-[#000000e9]">
           <p className=" -mb-5 sm:-mb-20 text-[13vw] -ml-10 font-extrabold footerBig text-white whitespace-nowrap tracking-widest uppercase select-none text-center  ">
