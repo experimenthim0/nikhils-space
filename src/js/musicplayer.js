@@ -44,7 +44,7 @@ document.getElementById("album").src = img;
 
     if (track["@attr"]?.nowplaying) {
   document.getElementById("playing").innerHTML =
-    `<p class="text-gray-400">Now Playing  <span class="text-green-600">• Online <span>  </p>`
+    `<p class="text-gray-400">Now Listening  <span class="text-green-600">• Online <span>  </p>`
 }
 
 }
