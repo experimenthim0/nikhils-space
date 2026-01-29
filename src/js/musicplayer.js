@@ -31,10 +31,10 @@ const artist = track.artist["#text"]
 //   document.getElementById("artist").innerText =
 //     track.artist["#text"];
 
-// const img =track.image?.[2]?.["#text"] ||"https://media.istockphoto.com/id/2204659981/vector/abstract-smooth-colorful-light-background.jpg?s=612x612&w=0&k=20&c=pFX2KiJlnQUD18dWm1zbKJMfjiqHV_ZRaSd-lPgDgx0="
+// const img =track.image?.[2]?.["#text"] 
     // 
     
-    const img = await getSongImage(song,artist)
+    const img = await getSongImage(song,artist) || "https://media.istockphoto.com/id/2204659981/vector/abstract-smooth-colorful-light-background.jpg?s=612x612&w=0&k=20&c=pFX2KiJlnQUD18dWm1zbKJMfjiqHV_ZRaSd-lPgDgx0="
 
 document.getElementById("album").src = img;
 

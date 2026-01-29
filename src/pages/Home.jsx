@@ -83,14 +83,14 @@ function Home() {
 
             {/* English */}
             <span
-              className={`flex items-center rounded py-2 px-[18px] text-sm font-medium ${!isChecked ? "text-primary bg-[#a7a7a7d0]" : "text-body-color"}`}
+              className={`flex items-center rounded py-2 px-[18px] text-sm font-medium ${!isChecked ? "text-primary border-[1px] border-gray-400 bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg" : "text-body-color"}`}
             >
               EN
             </span>
 
             {/* Rajasthani */}
             <span
-              className={`flex items-center rounded py-2 px-[18px] text-sm font-medium ${isChecked ? "text-primary bg-[#727272db]" : "text-body-color"}`}
+              className={`flex items-center rounded py-2 px-[18px] text-sm font-medium ${isChecked ? "text-primary border-[1px] border-gray-400 bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg" : "text-body-color"}`}
             >
               RJ
             </span>
@@ -104,7 +104,7 @@ function Home() {
               <span className="inline-flex animate-text-gradient bg-gradient-to-r from-[#a8c6fd] via-[#789cf9] to-[#2065f9] bg-[200%_auto] bg-clip-text text-transparent footerBig">
                 Nikhil Yadav
               </span>
-              . I build ideas, code, and real-world solutions
+              . I write code, build ideas and real-world solutions.
             </h3>
           </div>
           <div className="w-45 h-15 text-white relative inline-block overflow-hidden rounded-full p-[2px] mt-10">
@@ -289,7 +289,7 @@ function Home() {
           <h2 className="font-bold text-3xl text-white text-center mb-5">
             {t.contact}
             <span className="max-w-14 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1/2 block"></span>
-            <p className="text-[18px] text-gray-400 mt-2">{t.contacttext}</p>
+            <p className="text-[18px] text-gray-400 mt-2 px-4">{t.contacttext}</p>
           </h2>
         </div>
 
@@ -361,27 +361,30 @@ function Home() {
           <RiMapPin2Line size={18} />
           <p>Chomu, Jaipur, Rajasthan.</p>
         </div>
-          <p className="text-center text-xl font-semibold text-white">Now Playing</p>
+        <div className="border border-gray-300 m-8 py-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg">
+
+          <p className="text-center text-xl font-bold text-white mb-3 tracking-wide">Music Space</p>
         <div class=" flex justify-center items-center flex-row gap-2 px-2 py-2">
           <img
             id="album"
             src=""
             alt="Album Cover"
-            class="w-12 h-12 animate-spin [animation-duration:3s] rounded-full"
+            class="w-13 h-13 animate-spin [animation-duration:3s] rounded-full border-2 border-gray-400 shadow-md"
           />
           <div class="">
-            <p id="track" class="font-semibold text-md truncate w-50 text-white">
+            <p id="track" class="font-semibold text-[17px] truncate w-50 text-white">
               Loading...
             </p>
             <p id="artist"></p>
-            <p class="text-xs font-semibold text-gray-400" id="playing">
+            <p class="text-xs font-semibold text-gray-400 tracking-wide" id="playing">
               Him Music
             </p>
           </div>
         </div>
+        </div>
 
         <div className="relative w-full h-auto  overflow-hidden bg-[#000000e9]">
-          <p className=" -mb-5 sm:-mb-20 text-[13vw] -ml-10 font-extrabold footerBig text-white whitespace-nowrap tracking-widest uppercase select-none text-center  ">
+          <p className=" -mb-5 sm:-mb-20 text-[13vw] -ml-5 font-extrabold footerBig text-white whitespace-nowrap tracking-widest uppercase select-none text-center  ">
             Nikhil Yadav
           </p>
         </div>

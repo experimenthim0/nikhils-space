@@ -4,10 +4,7 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
   ],
-  server: {
-    port: 3000,
-    host:true,
-    allowedHosts: 'all',
-}
+ server: { port: 3000, host: true, allowedHosts: ['unadventurous-warehouse.outray.app']
+ }
   
 })
