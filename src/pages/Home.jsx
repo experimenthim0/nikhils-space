@@ -295,7 +295,7 @@ function Home() {
 
 
 
-        <div className=" relative flex justify-center items-center">
+        <div className=" relative max-w-md mx-auto flex justify-center items-center">
           <div className="h-4 w-25 bg-sky-500 z-20 absolute -top-3 right-14 "><p className="text-white text-[10px] font-semibold text-center flex items-center justify-center ">Exploring More</p></div>
          
           <h2 className="font-bold text-3xl text-white text-center mb-5">
@@ -372,7 +372,7 @@ function Home() {
          
         </div>
 
-        <div className=" relative flex justify-center items-center py-10">
+        <div className=" relative mx-auto max-w-md flex justify-center items-center py-10">
           <div className="h-8 w-20 bg-sky-500 z-20 absolute top-6 right-18 rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">Now</p></div>
           <h2 className="font-bold text-3xl text-white text-center mb-5">
             {t.contact}
