@@ -18,6 +18,8 @@ import {
   RiChatSmile2Line,
 } from "@remixicon/react";
 import getRecentTrack from "../js/musicplayer.js";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 function Home() {
   const [showAlert, setShowAlert] = useState(false);
 
@@ -34,7 +36,7 @@ function Home() {
     setShowAlert(true);
     const timer = setTimeout(() => {
       setShowAlert(false);
-    }, 5000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -103,21 +105,22 @@ function Home() {
           <div className="mx-5">
             <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center mb-5">
               {t.welcome}, I'm{" "}
-              <span className="inline-flex animate-text-gradient bg-gradient-to-r from-[#a8c6fd] via-[#789cf9] to-[#2065f9] bg-[200%_auto] bg-clip-text text-transparent footerBig">
+              <span className="inline-flex  bg-sky-400 px-2 py-1 footerBig">
                 Nikhil Yadav
               </span>
               . I write code, build ideas and real-world solutions.
             </h3>
           </div>
-          <div className="w-45 h-15 text-white relative inline-block overflow-hidden rounded-full p-[2px] mt-10">
-            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#FFFFFF_0%,#2563EB_50%,#FFFFFF_100%)]" />
-            <div className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 px-3 py-1 text-2xl font-semibold text-gray-50 backdrop-blur-3xl hover:bg-gray-700">
+          <div className="w-48 h-15 text-white relative inline-block overflow-hidden rounded-full p-[2px] mt-10">
+           
+            <div className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-900 border-[1px] border-white px-3 py-1 text-2xl font-semibold text-gray-50 backdrop-blur-3xl hover:bg-gray-700">
               <a
                 href="https://www.linkedin.com/in/nikhil0148"
                 target="_blank"
                 className="flex gap-1 text-[20px] items-center hover:bg-gray-700"
               >
-                Let's Connect
+                Let's Connect ↗
+                
               </a>
             </div>
           </div>
@@ -131,11 +134,11 @@ function Home() {
         </div>
 
         <div className="flex justify-center items-center text-white flex-col sm:flex-row gap-15">
-          <div className="shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)] shadow-white/53 bg-black bg-opacity-50 rounded-full">
+          <div className="  bg-black bg-opacity-50 rounded-full">
             <img
               src="/images/nikhil-1.jpg"
               alt="are yaar tu kha chla gya"
-              className="w-94 h-94 object-cover rounded-full transition-all duration-200 ease hover:w-100 hover:h-100"
+              className="w-94 h-94 object-cover rounded-full"
             />
           </div>
           <div className="mt-5 text-center max-w-xl">
@@ -256,7 +259,7 @@ function Home() {
           <div className="flex flex-col justify-center items-center gap-2">
             <div className="p-3 bg-skill rounded-full">
               <img
-                src="/images/express-svgrepo-com.svg"
+                src="/images/express-js.webp"
                 alt="express"
                 className="w-16 h-16"
               />
@@ -287,7 +290,90 @@ function Home() {
           </div>
         </div>
 
-        <div className="flex justify-center items-center">
+
+
+
+
+
+        <div className=" relative flex justify-center items-center">
+          <div className="h-4 w-25 bg-sky-500 z-20 absolute -top-3 right-14 "><p className="text-white text-[10px] font-semibold text-center flex items-center justify-center ">Exploring More</p></div>
+         
+          <h2 className="font-bold text-3xl text-white text-center mb-5">
+            APIs Explored 
+            <span className="max-w-20 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1/2 block"></span>
+          </h2>
+        </div>
+
+
+
+
+        <div className="flex justify-center items-center gap-5 flex-wrap mb-10">
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="p-3 bg-skill rounded-full">
+              <img
+                src="/images/Lastfm.svg"
+                alt="lastfm"
+                className="w-16 h-16"
+              />
+            </div>
+            <span className="text-white text-center font-bold">LastFM</span>
+          </div>
+
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="p-3 bg-skill rounded-full">
+              <img
+                src="/images/nodemailer.webp"
+                alt="css"
+                className="w-16 h-16"
+              />
+            </div>
+            <span className="text-white text-center font-bold">NodeMailer</span>
+          </div>
+
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="p-3 bg-skill rounded-full">
+              <img
+                src="/images/sharp.svg"
+                alt="sharp"
+                className="w-16 h-16"
+              />
+            </div>
+            <span className="text-white text-center font-bold">Sharp</span>
+          </div>
+
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="p-3 bg-skill rounded-full">
+              <img
+                src="/images/ytapi.png"
+                alt="js"
+                className="w-16 h-16"
+              />
+            </div>
+            <span className="text-white text-center font-bold">YT Data V3</span>
+          </div>
+
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="p-3 bg-skill rounded-full">
+              <img
+                src="/images/itunes.png"
+                alt="itunes"
+                className="w-18 h-16"
+              />
+            </div>
+            <span className="text-white text-center font-bold">iTunes</span>
+          </div>
+
+          
+
+       
+
+         
+
+         
+        </div>
+
+        <div className=" relative flex justify-center items-center py-10">
+          <div className="h-8 w-20 bg-sky-500 z-20 absolute top-6 right-18 rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">Now</p></div>
           <h2 className="font-bold text-3xl text-white text-center mb-5">
             {t.contact}
             <span className="max-w-14 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1/2 block"></span>
@@ -372,11 +458,23 @@ function Home() {
 
 
         <div className="flex items-center my-10">
-        <div className=" max-w-md mx-auto border border-gray-300 m-8 py-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg  my-10">
+        <div className="relative max-w-md mx-auto border border-gray-300 m-8 pt-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg  my-10">
+          {/* <div className="h-20 w-8 bg-amber-300 z-20 absolute left-0 right-1/2 mx-10   -mt-12 rotate-45 block"></div> */}
+          <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -left-7 -rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">NIK</p></div>
+
+ 
+  <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -right-7 rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">HIM</p></div>
+
+  
+  {/* <div className="h-20 w-8 bg-amber-300 z-20 absolute -bottom-9 -left-2 -rotate-45"></div>
+
+  
+  <div className="h-20 w-8 bg-amber-300 z-20 absolute -bottom-9 -right-2 rotate-45"></div> */}
+
 
           <p className="text-center text-xl font-bold text-white mb-3 tracking-wide">Music Space </p>
           <span className="max-w-81 h-0.5 bg-gray-300 z-20 absolute left-0 right-0 mx-auto -mt-1/2  block"></span>
-        <div class=" flex justify-center items-center flex-row gap-2 px-2 pt-4 ">
+        <div class=" flex justify-center items-center flex-row gap-2 px-2 pt-4 mb-5 ">
           <img
             id="album"
             
@@ -394,6 +492,7 @@ function Home() {
             </p>
           </div>
         </div>
+     
         </div>
         </div>
        
