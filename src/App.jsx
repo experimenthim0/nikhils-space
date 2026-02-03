@@ -6,7 +6,8 @@ import React from "react";
 
 
 import Home from "./pages/Home.jsx";
-import Supportme from "./pages/supportme.jsx";
+import Supportme from "./pages/Supportme.jsx";
+
 
 
 
@@ -21,7 +22,7 @@ function App() {
 
 <Routes>
   <Route path="/" element={<Home />} />
-  <Route path="/supportme" element={<Supportme />} />
+  <Route path="/supportme" element={<Supportme/>} />
 
 </Routes>
 
