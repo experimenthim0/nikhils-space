@@ -1,11 +1,12 @@
 import { useState,useEffect, use } from "react";
-import {Route , Routes,Router} from "react-router-dom"
+import {BrowserRouter,Route , Routes,Router} from "react-router-dom"
 import "./App.css";
 import "./index.css";
 import React from "react";
 
 
 import Home from "./pages/Home.jsx";
+import Supportme from "./pages/supportme.jsx";
 
 
 
@@ -18,7 +19,13 @@ function App() {
   return (
     <>
 
-<Home />
+<Routes>
+  <Route path="/" element={<Home />} />
+  <Route path="/supportme" element={<Supportme />} />
+
+</Routes>
+
+
     </>
   );
 }
