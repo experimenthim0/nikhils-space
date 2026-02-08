@@ -3,6 +3,14 @@ import { Route, Routes, Router, Link } from "react-router-dom";
 import "../App.css";
 
 import ContactForm from "./Contact.jsx"
+// import { Neko } from 'neko-ts';
+import { GitHubCalendar } from 'react-github-calendar';
+
+
+
+import { neko } from 'onekojs';
+
+
 
 import React from "react";
 import translations from "../js/translation.js";
@@ -33,6 +41,46 @@ function Home() {
     getRecentTrack();
     setInterval(getRecentTrack, 10000);
   });
+
+
+useEffect(()=>{
+  neko()
+},[])
+
+//  useEffect(() => {
+//   const neko = new Neko({
+//     speed: 10, // Increase this number to make the cat faster
+//     offset: { x: 0, y: 0 }, // Optional: offset from the cursor
+//     origin: { x: 100, y: 100 }, // Initial starting position
+//   });
+
+//   return () => {
+//     // If the library uses destroy, use it; 
+//     // otherwise, you may need to manually remove the element if it persists.
+//     if (neko.destroy) {
+//       neko.destroy();
+//     } else {
+//       document.getElementById("oneko")?.remove();
+//     }
+//   };
+// }, []);
+
+// useEffect(() => {
+//   const neko = new Neko({
+//     speed: 10, // Keep this at default so animation frames trigger
+//   });
+
+//   // Manually slow down the movement by forcing a CSS transition
+//   const nekoEl = document.getElementById('oneko');
+//   if (nekoEl) {
+//     nekoEl.style.transition = "top 0.5s ease-out, left 0.5s ease-out";
+//   }
+
+//   return () => neko.destroy();
+// }, []);
+
+  
+
 
   useEffect(() => {
     setShowAlert(true);
@@ -69,7 +117,11 @@ function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#1b1b1e] w-full overflow-x-hidden relative scroll-smooth myfont">
+    <div className="min-h-screen bg-black w-full overflow-x-hidden relative scroll-smooth myfont">
+
+
+ 
+
       {/* {showAlert && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-3 py-2 rounded shadow-lg z-50 flex items-center justify-between w-90 sm:w-190 max-w-md">
           Hi! You can Switch Language between English and Rajasthani using the
@@ -143,7 +195,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="flex justify-center items-center bg-neutral-900">
+        <div className="flex justify-center items-center ">
           <h2 className="font-bold text-3xl text-white text-center mb-5">
             {t.aboutText}
             <span className="max-w-14 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1/2 block"></span>
@@ -177,7 +229,7 @@ function Home() {
           {project.map((proj, index) => (
             <div
               key={index}
-              className="bg-gray-800 bg-opacity-50 rounded-lg p-6 m-4 shadow-lg w-80 hover:scale-105 transform transition-transform duration-300 ease-in-out"
+              className="bg-gray-800 bg-opacity-50 border-2 border-dashed border-gray-400 rounded-lg p-6 m-4 shadow-lg w-80 hover:scale-105 transform transition-transform duration-300 ease-in-out"
             >
               <img
                 src={proj.imgsrc}
@@ -308,7 +360,31 @@ function Home() {
         </div>
 
 
+<div className="flex flex-col items-center py-10  bg-black">
+  {/* Experiments Section */}
+   <div className="flex flex-col items-center mx-2">
+    {/* <p className="text-3xl font-semibold text-white mb-4">Experiment</p> */}
+    <div className="bg-gray-900  p-2 rounded shadow-lg text-gray-300">
+      <GitHubCalendar username="experimenthim0" blockSize={window.innerWidth < 768 ? 5 : 12} 
+                blockMargin={window.innerWidth < 768 ? 3 : 4}
+                fontSize={window.innerWidth < 768 ? 10 : 14}
+                
+                />
+    </div>
+  </div>
 
+  {/* Personal Section */}
+  {/* <div className="flex flex-col items-center mx-2">
+    <p className="text-3xl font-semibold text-white mb-4">Personal</p>
+    <div className="bg-gray-900  p-2 rounded shadow-lg text-gray-300">
+      <GitHubCalendar username="nikhilydv0148" blockSize={window.innerWidth < 768 ? 5 : 12} 
+                blockMargin={window.innerWidth < 768 ? 3 : 4}
+                fontSize={window.innerWidth < 768 ? 10 : 14}
+                
+                />
+    </div>
+  </div> */}
+</div>
 
 
 
@@ -331,7 +407,7 @@ function Home() {
           </h2>
         </div>
 
-        {/* <div className="w-full flex justify-center items-center flex-col text-white mt-2 gap-2 mb-10">
+        <div className="w-full flex justify-center items-center flex-col text-white mt-2 gap-2 mb-10">
           <div
             className="inline-flex px-8 h-10 gap-1 items-center justify-center bg-white text-black py-1.5 rounded-full text-[18px] font-medium hover:text-black-500 hover:bg-gray-100/80 cursor-pointer"
             onClick={() =>
@@ -342,7 +418,7 @@ function Home() {
             <p>ChatWithMe</p>
           </div>
           <p className="text-gray-400 text-[14px]">Time : 12:00 PM - 8:00 PM</p>
-        </div> */}
+        </div>
 
         <div className="flex justify-center items-center gap-5 flex-wrap">
           <a
@@ -405,12 +481,12 @@ function Home() {
 
 
         <div className="flex items-center my-10 myfont">
-        <div className="relative max-w-md mx-auto border border-gray-300 m-8 pt-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg  my-10">
+        <div className="relative max-w-md mx-auto border-dashed border-[1.5px] border-gray-300 m-8 pt-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg  my-10">
           {/* <div className="h-20 w-8 bg-amber-300 z-20 absolute left-0 right-1/2 mx-10   -mt-12 rotate-45 block"></div> */}
-          <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -left-7 -rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">NIK</p></div>
+          {/* <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -left-7 -rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">NIK</p></div> */}
 
  
-  <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -right-7 rotate-45 "><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">HIM</p></div>
+  {/* <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -right-7 rotate-45 "><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">HIM</p></div> */}
 
   
   {/* <div className="h-20 w-8 bg-amber-300 z-20 absolute -bottom-9 -left-2 -rotate-45"></div>
@@ -420,7 +496,7 @@ function Home() {
 
 
           <p className="text-center text-xl font-bold text-white mb-3 tracking-wide ">Music Space </p>
-          <span className="max-w-81 h-0.5 bg-gray-300 z-20 absolute left-0 right-0 mx-auto -mt-1/2  block"></span>
+          <span className="max-w-[20rem] border-t-2 border-dotted border-gray-300 z-20 absolute left-0 right-0 mx-auto -mt-0.5 block"></span>
         <div class=" flex justify-center items-center flex-row gap-2 px-2 pt-4 mb-5 ">
           <img
             id="album"
@@ -450,18 +526,18 @@ function Home() {
 
         <div className="relative py-30 overflow-hidden border-t border-white/5 ">
   {/* Background Pattern */}
-  <div 
+  {/* <div 
     className="absolute inset-0 h-full w-full opacity-30"
     style={{
       backgroundImage: `radial-gradient(#e5e7eb 1px, transparent 1px)`,
       backgroundSize: '16px 16px'
     }}
-  ></div>
+  ></div> */}
 
   {/* Content Container */}
   <div className="relative max-w-7xl mx-auto px-6">
     <div className="text-center">
-      <h3 className="text-8xl md:text-9xl lg:text-[12rem]  font-bold footerBig text-white/40 uppercase leading-none tracking-tighter select-none">
+      <h3 className="text-8xl md:text-9xl lg:text-[12rem]  font-bold footerBig text-white/60 uppercase leading-none tracking-tighter select-none">
         Nikhil Yadav
       </h3>
     </div>
@@ -473,7 +549,7 @@ function Home() {
                 backdrop-blur-[25px] bg-[#faf5ec1a] shadow-md">
   
 <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white hover:text-gray-500 "
             href="https://twitter.com/nikhil0148"
             target="_blank"
           >
@@ -481,7 +557,7 @@ function Home() {
            
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white hover:text-gray-400"
             href="https://www.linkedin.com/in/nikhil0148"
             target="_blank"
           >
@@ -489,7 +565,7 @@ function Home() {
            
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white hover:text-gray-400"
             href="https://github.com/nikhilydv0148"
             target="_blank"
           >
@@ -498,7 +574,7 @@ function Home() {
             <RiGithubLine size="24px"/>
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white hover:text-pink-400"
             href="https://nikhim.me/supportme"
             target="_blank"
           >

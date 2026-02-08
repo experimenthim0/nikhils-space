@@ -3,7 +3,7 @@ const translations = {
     welcome: "Hi",
     aboutText:"About Me",
     about:"Hello! I'm Nikhil, a passionate developer and tech enthusiast. I love creating innovative solutions and exploring new technologies. In my free time, I playing badminton, watching movies, and listening Music. Welcome to my personal space where I share my projects and experiences. Lets connect and create something amazing together",
-   process: "Construction In Progress , Coming Soon!",
+   process: " Construction In Progress..",
 
    contact:"Get in Touch",
    contacttext:"If you want to work together or talk about ideas, feel free to contact me.",

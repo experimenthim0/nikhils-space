@@ -57,15 +57,15 @@ const onHCaptchaChange = (token) => {
           </div>
           <div class="mb-6">
             <label for="phone" class="block mb-2 text-sm text-gray-400">Phone Number</label>
-            <input type="text" name="phone" id="phone" placeholder="+91 999999999" required class="w-full px-3 py-2 h-12 rounded-sm placeholder-gray-500 text-gray-900 bg-gray-100 text-sm focus:outline-none" />
+            <input type="text" name="phone" id="phone" placeholder="+91 9876543210" required class="w-full px-3 py-2 h-12 rounded-sm placeholder-gray-500 text-gray-900 bg-gray-100 text-sm focus:outline-none" />
           </div>
           <div class="mb-6">
             <label for="message" class="block mb-2 text-sm text-gray-400">Your Message</label>
 
             <textarea rows="5" name="message" id="message" placeholder="Express your words here" class="w-full px-3 py-2 rounded-sm placeholder-gray-500 text-gray-900 bg-gray-100 text-sm focus:outline-none" required></textarea>
           </div>
-          <div class="mb-6">
-            <button type="submit" class="w-full bg-blue-800 inline-block text-white no-underline hover:text-indigo-100 py-4 px-4 rounded-sm focus:outline-none">
+          <div class="mb-6 border-[1px] border-dashed border-gray-400">
+            <button type="submit" class="w-full bg-black inline-block text-white no-underline hover:text-indigo-100 py-4 px-4 rounded-sm focus:outline-none ">
               Send Message
             </button>
           </div>

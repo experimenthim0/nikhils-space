@@ -46,6 +46,13 @@ Source - https://stackoverflow.com/a
 Posted by bookcasey
 Retrieved 2025-12-31, License - CC BY-SA 3.0
 */
+#oneko {
+  /* This forces the browser to slide the cat smoothly between points */
+  transition: top 0.2s linear, left 0.2s linear !important;
+  background-color: transparent !important;
+  z-index: 9999 !important;
+}
+
 
 .string{
   -webkit-transform-origin:50% 0%;

@@ -8,6 +8,22 @@ body{
   
  
 }
+
+
+
+
+#oneko {
+  /* This forces the browser to slide the cat smoothly between points */
+  transition: top 0.2s linear, left 0.2s linear !important;
+  background-color: transparent !important;
+  z-index: 9999 !important;
+}
+
+
+
+
+
+
 .bg-mine{
   background: #000;
   background-image: radial-gradient(#ffffff33,1px,#00091d,1px);
