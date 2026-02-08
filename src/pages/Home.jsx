@@ -16,6 +16,8 @@ import {
   RiDiscordLine,
   RiEarthLine,
   RiChatSmile2Line,
+  RiHeart2Fill,
+  RiHeart3Line,
 } from "@remixicon/react";
 import getRecentTrack from "../js/musicplayer.js";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
@@ -58,11 +60,17 @@ function Home() {
       description: "A platform to explore AI tools and coding resources.",
       imgsrc: "/images/aincode.png",
     },
+    {
+      name: "LifeDay Dots",
+      link: "https://chromewebstore.google.com/detail/lifeday-dots/dmpongfigiibmadlbibagpopfomoeoee",
+      description: "A minimal Chrome extension that shows time passing through daily dots, reminding you that every day counts.",
+      imgsrc: "/images/lifedaydots.png",
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-900 w-full overflow-x-hidden">
-      {showAlert && (
+    <div className="min-h-screen bg-[#1b1b1e] w-full overflow-x-hidden relative scroll-smooth myfont">
+      {/* {showAlert && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-3 py-2 rounded shadow-lg z-50 flex items-center justify-between w-90 sm:w-190 max-w-md">
           Hi! You can Switch Language between English and Rajasthani using the
           EN & RJ button at the top.
@@ -73,9 +81,9 @@ function Home() {
             &times;
           </button>
         </div>
-      )}
+      )} 
 
-      <div className="w-full bg-neutral-900 myfont">
+      {/* <div className="w-full bg-neutral-900 myfont">
         <div className="flex justify-center w-full pt-5 text-white">
           <label className="themeSwitcherTwo shadow-card relative inline-flex cursor-pointer select-none items-center justify-center rounded-md bg-black p-1">
             <input
@@ -85,21 +93,30 @@ function Home() {
               onChange={handleCheckboxChange}
             />
 
-            {/* English */}
+           
             <span
               className={`flex items-center rounded py-2 px-[18px] text-sm font-medium ${!isChecked ? "text-primary border-[1px] border-gray-400 bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg" : "text-body-color"}`}
             >
               EN
             </span>
 
-            {/* Rajasthani */}
+           
             <span
               className={`flex items-center rounded py-2 px-[18px] text-sm font-medium ${isChecked ? "text-primary border-[1px] border-gray-400 bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg" : "text-body-color"}`}
             >
               RJ
             </span>
           </label>
-        </div>
+        </div> */}
+{/* <div className="px-6*51 py-2 fixed top-6 left-1/4 transform -translate-x-1 z-50 
+                rounded-4xl border-[1px] border-[#b5a98f26]
+                backdrop-blur-[25px] bg-[#faf5ec1a] shadow-md">
+ <p className="text-white px-10 font-poppins font-semibold text-2xl tracking-wide">
+  Nikhil Yadav
+</p>
+
+</div> */}
+
 
         <div className="text-3xl font-bold text-center min-h-screen flex justify-center items-center flex-col text-white">
           <div className="mx-5">
@@ -119,7 +136,7 @@ function Home() {
                 target="_blank"
                 className="flex gap-1 text-[20px] items-center hover:bg-gray-700"
               >
-                Let's Connect ↗
+                Let's Connect ↗ 
                 
               </a>
             </div>
@@ -176,7 +193,7 @@ function Home() {
                 target="_blank"
                 className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full  hover:bg-blue-700 transition-colors duration-300 ease-in-out"
               >
-                See More
+                View Live
               </a>
             </div>
           ))}
@@ -295,74 +312,7 @@ function Home() {
 
 
 
-        <div className=" relative max-w-md mx-auto flex justify-center items-center">
-          <div className="h-4 w-25 bg-sky-500 z-20 absolute -top-3 right-14 "><p className="text-white text-[10px] font-semibold text-center flex items-center justify-center ">Exploring More</p></div>
-         
-          <h2 className="font-bold text-3xl text-white text-center mb-5">
-            APIs Explored 
-            <span className="max-w-20 h-0.5 bg-white z-20 absolute left-0 right-0 mx-auto mt-1/2 block"></span>
-          </h2>
-        </div>
-
-
-
-
-        <div className="flex justify-center items-center gap-5 flex-wrap mb-10">
-          <div className="flex flex-col justify-center items-center gap-2">
-            <div className="p-3 bg-skill rounded-full">
-              <img
-                src="/images/Lastfm.svg"
-                alt="lastfm"
-                className="w-16 h-16"
-              />
-            </div>
-            <span className="text-white text-center font-bold">LastFM</span>
-          </div>
-
-          <div className="flex flex-col justify-center items-center gap-2">
-            <div className="p-3 bg-skill rounded-full">
-              <img
-                src="/images/nodemailer.webp"
-                alt="css"
-                className="w-16 h-16"
-              />
-            </div>
-            <span className="text-white text-center font-bold">NodeMailer</span>
-          </div>
-
-          <div className="flex flex-col justify-center items-center gap-2">
-            <div className="p-3 bg-skill rounded-full">
-              <img
-                src="/images/sharp.svg"
-                alt="sharp"
-                className="w-16 h-16"
-              />
-            </div>
-            <span className="text-white text-center font-bold">Sharp</span>
-          </div>
-
-          <div className="flex flex-col justify-center items-center gap-2">
-            <div className="p-3 bg-skill rounded-full">
-              <img
-                src="/images/ytapi.png"
-                alt="js"
-                className="w-16 h-16"
-              />
-            </div>
-            <span className="text-white text-center font-bold">YT Data V3</span>
-          </div>
-
-          <div className="flex flex-col justify-center items-center gap-2">
-            <div className="p-3 bg-skill rounded-full">
-              <img
-                src="/images/itunes.png"
-                alt="itunes"
-                className="w-18 h-16"
-              />
-            </div>
-            <span className="text-white text-center font-bold">iTunes</span>
-          </div>
-
+       
           
 
        
@@ -370,7 +320,7 @@ function Home() {
          
 
          
-        </div>
+      
 
         <div className=" relative mx-auto max-w-md flex justify-center items-center py-10">
           <div className="h-8 w-20 bg-sky-500 z-20 absolute top-6 right-18 rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">Now</p></div>
@@ -396,7 +346,7 @@ function Home() {
 
         <div className="flex justify-center items-center gap-5 flex-wrap">
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-[#faf5ec23] backdrop-blur-[24px] border border-[#d2c6ad46] text-white"
             href="https://www.linkedin.com/in/nikhil0148"
             target="_blank"
           >
@@ -404,7 +354,7 @@ function Home() {
             LinkedIn
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-[#faf5ec23] backdrop-blur-[24px] border border-[#d2c6ad46] text-white"
             href="https://twitter.com/nikhil0148"
             target="_blank"
           >
@@ -412,7 +362,7 @@ function Home() {
             Twitter(X)
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-[#faf5ec23] backdrop-blur-[24px] border border-[#d2c6ad46] text-white"
             href="https://github.com/nikhilydv0148"
             target="_blank"
           >
@@ -420,7 +370,7 @@ function Home() {
             GitHub
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-[#faf5ec23] backdrop-blur-[24px] border border-[#d2c6ad46] text-white"
             href="https://peerlist.io/nikhil0148"
             target="_blank"
           >
@@ -428,7 +378,7 @@ function Home() {
             Peerlist
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-[#faf5ec23] backdrop-blur-[24px] border border-[#d2c6ad46] text-white"
             href="https://discord.gg/WKejKbMJ"
             target="_blank"
           >
@@ -436,7 +386,7 @@ function Home() {
             Discord
           </a>
           <a
-            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500 hover:text-blue-500 hover:bg-blue-800/80"
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium bg-[#faf5ec23] backdrop-blur-[24px] border border-[#d2c6ad46] text-white"
             href="mailto:contact.nikhim@gmail.com"
             target="_blank"
           >
@@ -445,10 +395,7 @@ function Home() {
           </a>
         </div>
 
-        <div className="w-full flex justify-center items-center text-white mt-2 gap-2 mb-4">
-          <RiMapPin2Line size={18} />
-          <p>Chomu, Jaipur, Rajasthan.</p>
-        </div>
+       
 
 
 
@@ -457,13 +404,13 @@ function Home() {
 
 
 
-        <div className="flex items-center my-10">
+        <div className="flex items-center my-10 myfont">
         <div className="relative max-w-md mx-auto border border-gray-300 m-8 pt-4 px-6 rounded-lg bg-gradient-to-r from-gray-850 to-gray-950 shadow-lg  my-10">
           {/* <div className="h-20 w-8 bg-amber-300 z-20 absolute left-0 right-1/2 mx-10   -mt-12 rotate-45 block"></div> */}
           <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -left-7 -rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">NIK</p></div>
 
  
-  <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -right-7 rotate-45"><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">HIM</p></div>
+  <div className="h-8 w-20 bg-blue-500 z-20 absolute -top-1 -right-7 rotate-45 "><p className="text-white text-2xl font-semibold text-center flex items-center justify-center ">HIM</p></div>
 
   
   {/* <div className="h-20 w-8 bg-amber-300 z-20 absolute -bottom-9 -left-2 -rotate-45"></div>
@@ -472,7 +419,7 @@ function Home() {
   <div className="h-20 w-8 bg-amber-300 z-20 absolute -bottom-9 -right-2 rotate-45"></div> */}
 
 
-          <p className="text-center text-xl font-bold text-white mb-3 tracking-wide">Music Space </p>
+          <p className="text-center text-xl font-bold text-white mb-3 tracking-wide ">Music Space </p>
           <span className="max-w-81 h-0.5 bg-gray-300 z-20 absolute left-0 right-0 mx-auto -mt-1/2  block"></span>
         <div class=" flex justify-center items-center flex-row gap-2 px-2 pt-4 mb-5 ">
           <img
@@ -501,13 +448,68 @@ function Home() {
 
        
 
-        <div className="relative w-full h-auto  overflow-hidden bg-neutral-900">
-          <p className=" -mb-5 sm:-mb-20 text-[13vw] -ml-5 font-extrabold footerBig text-white whitespace-nowrap tracking-widest uppercase select-none text-center  ">
-            Nikhil Yadav
-          </p>
-        </div>
-      </div>
+        <div className="relative py-30 overflow-hidden border-t border-white/5 ">
+  {/* Background Pattern */}
+  <div 
+    className="absolute inset-0 h-full w-full opacity-30"
+    style={{
+      backgroundImage: `radial-gradient(#e5e7eb 1px, transparent 1px)`,
+      backgroundSize: '16px 16px'
+    }}
+  ></div>
+
+  {/* Content Container */}
+  <div className="relative max-w-7xl mx-auto px-6">
+    <div className="text-center">
+      <h3 className="text-8xl md:text-9xl lg:text-[12rem]  font-bold footerBig text-white/40 uppercase leading-none tracking-tighter select-none">
+        Nikhil Yadav
+      </h3>
     </div>
+  </div>
+</div>
+    
+    <div className="px-6 py-1 fixed bottom-4 right-1 transform -translate-x-1/5 z-50 
+                rounded-4xl border-[1px] border-[#d2c6ad46]
+                backdrop-blur-[25px] bg-[#faf5ec1a] shadow-md">
+  
+<a
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            href="https://twitter.com/nikhil0148"
+            target="_blank"
+          >
+            <RiTwitterXLine size="24px" />
+           
+          </a>
+          <a
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            href="https://www.linkedin.com/in/nikhil0148"
+            target="_blank"
+          >
+             <RiLinkedinFill size="24px" />
+           
+          </a>
+          <a
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            href="https://github.com/nikhilydv0148"
+            target="_blank"
+          >
+             
+           
+            <RiGithubLine size="24px"/>
+          </a>
+          <a
+            className="inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium lue-800 text-white"
+            href="https://nikhim.me/supportme"
+            target="_blank"
+          >
+             
+           
+            <RiHeart3Line size="24px"/>
+          </a>
+            
+</div>
+      </div>
+    
   );
 }
 
