@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Route, Routes, Router, Link } from "react-router-dom";
 import "../App.css";
-import { Avatar } from "avataaars";
+
 import ContactForm from "./Contact.jsx";
 import { GitHubCalendar } from "react-github-calendar";
 import { neko } from "onekojs";
