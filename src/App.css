@@ -1,3 +1,5 @@
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 .heart{
    width: 20px;
         height: 20px;
@@ -11,6 +13,15 @@
   font-family: 'myfont';
   src: local('mysans'), url(./fonts/mysans.ttf) format('truetype');
 }
+/* @font-face {
+  font-family: 'vercelgeist';
+  src: local('vercelgeist'), url(./fonts/GeistPixel-Circle.otf) format('opentype');
+} */
+@font-face {
+  font-family: 'vercelgeist';
+  src: local('vercelgeist'), url(./fonts/GeistPixel-Grid.ttf) format('truetype');
+}
+
 @font-face {
   font-family: 'LostTumbler';
   src: local('LostTumbler'), url(./fonts/LostTumbler.otf) format('opentype');
@@ -25,6 +36,11 @@
 }
 .calmfont{
     font-family: calmfont, Arial, serif;
+    font-weight: black;
+}
+
+.vercelgeist{
+   font-family: vercelgeist, Arial, serif;
     font-weight: black;
 }
 

@@ -60,7 +60,7 @@ document.getElementById("album").src = img;
 }
   }  catch(error){
     document.getElementById("track").innerText = "Request Blocked by your Internet Provider/ Institute Network"
-    document.getElementById("track").className="text-[14px] text-gray-200 w-50 text-wrap"
+    document.getElementById("track").className="text-[14px] text-gray-400 w-50 text-wrap"
      const img = "https://media.istockphoto.com/id/2204659981/vector/abstract-smooth-colorful-light-background.jpg?s=612x612&w=0&k=20&c=pFX2KiJlnQUD18dWm1zbKJMfjiqHV_ZRaSd-lPgDgx0="
 
 document.getElementById("album").src = img;

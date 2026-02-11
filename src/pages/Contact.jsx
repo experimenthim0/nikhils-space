@@ -1,8 +1,10 @@
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import React,{ useState } from 'react';
 
-export default function ContactForm() {
+export default function ContactForm({isDark}) {
   const [result, setResult] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    
 
 const onHCaptchaChange = (token) => {
     setValue("h-captcha-response", token);
@@ -32,11 +34,11 @@ const onHCaptchaChange = (token) => {
   
 
 
-<div class="flex items-center min-h-screen px-6">
+<div class="flex items-center min-h-screen px-6 ">
   <div class="container mx-auto">
-    <div class="max-w-md mx-auto my-10 bg-gray-800 p-1 rounded-md shadow-sm">
+    <div class="max-w-md mx-auto my-10 border-dotted border-2 border-gray-400 p-1 rounded-md shadow-sm">
       <div class="text-center">
-        <h1 class="my-3 text-3xl font-semibold text-gray-100">
+        <h1 className={`my-3 text-3xl font-semibold ${isDark? 'text-gray-300' :'text-gray-600'}`}>
           Reach Out to Me
         </h1>
         <p class="text-gray-400 dark:text-gray-400">

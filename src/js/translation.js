@@ -2,8 +2,8 @@ const translations = {
   en: {
     welcome: "Hi",
     aboutText:"About Me",
-    about:"Hello! I'm Nikhil, a passionate developer and tech enthusiast. I love creating innovative solutions and exploring new technologies. In my free time, I playing badminton, watching movies, and listening Music. Welcome to my personal space where I share my projects and experiences. Lets connect and create something amazing together",
-   process: " Construction In Progress..",
+    about:"Hi, I’m Nikhil. I’m a passionate developer and tech enthusiast dedicated to building innovative solutions that bridge the gap between complex problems and elegant code. Beyond the screen, you’ll find me on the badminton court, catching the latest films, or discovering new music. I love exploring emerging technologies and turning ambitious ideas into reality—let’s connect and build something amazing together.",
+     process: " Construction In Progress..",
 
    contact:"Get in Touch",
    contacttext:"If you want to work together or talk about ideas, feel free to contact me.",

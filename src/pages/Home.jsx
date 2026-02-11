@@ -174,7 +174,7 @@ useEffect(()=>{
           <div className="mx-5">
             <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center mb-5">
               {t.welcome}, I'm{" "}
-              <span className="inline-flex  bg-sky-400 px-2 py-1 footerBig">
+              <span className="inline-flex  bg-sky-400 px-2 py-1 vercelgeist">
                 Nikhil Yadav
               </span>
               . I write code, build ideas and real-world solutions.
@@ -537,7 +537,7 @@ useEffect(()=>{
   {/* Content Container */}
   <div className="relative max-w-7xl mx-auto px-6">
     <div className="text-center">
-      <h3 className="text-8xl md:text-9xl lg:text-[12rem]  font-bold footerBig text-white/60 uppercase leading-none tracking-tighter select-none">
+      <h3 className="text-8xl md:text-9xl lg:text-[12rem]  font-bold vercelgeist text-white/60 uppercase leading-none tracking-tighter select-none">
         Nikhil Yadav
       </h3>
     </div>

@@ -8,6 +8,8 @@ import React from "react";
 
 import Home from "./pages/Home.jsx";
 import Supportme from "./pages/Supportme.jsx";
+import DarkHome from "./pages/DarkHome.jsx";
+import NewHome from "./pages/NewHome.jsx";
 
 
 
@@ -22,7 +24,9 @@ function App() {
     <>
 
 <Routes>
-  <Route path="/" element={<Home />} />
+  {/* <Route path="/" element={<Home />} /> */}
+  {/* <Route path="/" element={<DarkHome />} /> */}
+  <Route path="/" element={<NewHome />} />
   <Route path="/supportme" element={<Supportme/>} />
 
 </Routes>
