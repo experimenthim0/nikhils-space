@@ -8,7 +8,7 @@ import React from "react";
 
 import Home from "./pages/Home.jsx";
 import Supportme from "./pages/Supportme.jsx";
-import Myani from "./pages/myani.jsx";
+import Myani from "./pages/Myani.jsx";
 
 
 
