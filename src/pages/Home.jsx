@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+"use client";
+import { Tooltip } from "@/components/ui/tooltip-card";
 import { Route, Routes, Router, Link } from "react-router-dom";
 import "../App.css";
 
@@ -25,6 +27,7 @@ import {
 } from "@remixicon/react";
 import getRecentTrack from "../js/musicplayer.js";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { TooltipCardDemo } from "./TooltipCardDemo";
 
 function NewHome() {
   const [showAlert, setShowAlert] = useState(false);
@@ -108,12 +111,15 @@ function NewHome() {
           <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center mb-5">
             {t.welcome}, I'm{" "}
             <span
+            id="namehover"
               className={`inline-flex bg-sky-400 px-2 py-1 vercelgeist ${isDark ? "text-white" : "text-white"}`}
             >
               Nikhil Yadav
             </span>
+
             . I write code, build ideas and real-world solutions.
           </h3>
+         
         </div>
         <div
           className={`w-48 h-15 ${isDark ? "text-white" : "text-gray-900"} relative inline-block overflow-hidden rounded-full p-[2px] mt-10`}
@@ -135,6 +141,9 @@ function NewHome() {
           </div>
         </div>
       </div>
+
+{/* <TooltipCardDemo /> */}
+
 
       <div className="flex justify-center items-center ">
         <h2
@@ -165,11 +174,17 @@ function NewHome() {
           )}
         </div>
         <div className="mt-5 text-center max-w-xl">
-          <p
+          <div
             className={`font-LostTumbler text-lg sm:text-xl md:text-2xl lg:text-2xl ${isDark ? "text-white" : "text-gray-800"} text-justify mx-5`}
           >
-            {t.about}
-          </p>
+            Hi, I’m <Tooltip
+           containerClassName="text-neutral-600 dark:text-neutral-700"
+           content={<TooltipCard />}>
+           {" "}
+           <span className="cursor-pointer font-bold">Nikhil Yadav</span>
+         </Tooltip>. I’m a passionate developer and tech enthusiast dedicated to building innovative solutions that bridge the gap between complex problems and elegant code. Beyond the screen, you’ll find me on the badminton court, catching the latest films, or discovering new music. I love exploring emerging technologies and turning ambitious ideas into reality—let’s connect and build something amazing together.",
+     
+          </div>
         </div>
       </div>
 
@@ -454,7 +469,7 @@ function NewHome() {
         <p
           className={` p-20 text-center ${isDark ? "text-white" : "text-gray-600"}`}
         >
-          Made With ❤️ By Nikhil Yadav
+          Made With ❤️ 
         </p>
       </div>
 
@@ -505,3 +520,48 @@ function NewHome() {
 }
 
 export default NewHome;
+
+
+
+
+const TooltipCard = () => {
+  return (
+    <div>
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/9187/9187532.png"
+        alt="Nikhil"
+        className="aspect-square w-full rounded-sm" />
+      <div className="my-4 flex flex-col">
+        <p className="text-lg font-bold">Nikhil Yadav</p>
+        <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
+           Developer from NITJ. Enthusiastic and exhibits
+          entrepreneurial spirit.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const TestimonialCard = () => {
+  return (
+    <div className="">
+      <blockquote className="mb-4 text-neutral-700 dark:text-neutral-300">
+        This product is absolutely, grade A horse shit.
+      </blockquote>
+      <div className="flex items-center gap-2">
+        <img
+          src="https://assets.aceternity.com/screenshots/tyler.webp"
+          alt="Tyler Durden"
+          className="size-6 rounded-full object-cover" />
+        <div>
+          <p className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+            Tyler Durden
+          </p>
+          <p className="text-[10px] text-neutral-600 dark:text-neutral-400">
+            Senior Product Manager at FC
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};

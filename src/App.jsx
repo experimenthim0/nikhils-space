@@ -8,7 +8,7 @@ import React from "react";
 
 import Home from "./pages/Home.jsx";
 import Supportme from "./pages/Supportme.jsx";
-// import Myani from "./pages/Myani.jsx";
+
 
 
 
@@ -26,7 +26,7 @@ function App() {
 
 <Routes>
   <Route path="/" element={<Home />} />
-  {/* <Route path="/myani" element={<Myani />} /> */}
+  
 
   <Route path="/supportme" element={<Supportme/>} />
 
