@@ -87,62 +87,84 @@ function NewHome() {
 
   return (
     <div
-      className={`min-h-screen ${isDark ? "bg-black" : "bg-white"} w-full overflow-x-hidden relative scroll-smooth myfont transition-colors duration-300`}
+  className={`min-h-screen w-full overflow-x-hidden ${isDark ? "bg-black" : "bg-white"} relative scroll-smooth myfont transition-colors duration-300`}
+>
+  {/* Theme Switcher */}
+  <div className="fixed top-6 right-6 z-50">
+    <button
+      onClick={toggleTheme}
+      className={`p-3 rounded-full ${
+        isDark
+          ? "bg-gray-800 border border-gray-700 text-yellow-400 hover:bg-gray-700"
+          : "bg-gray-100 border border-gray-300 text-gray-900 hover:bg-gray-200"
+      } transition-all duration-300 shadow-lg`}
+      aria-label="Toggle theme"
     >
-      {/* Theme Switcher */}
-      <div className="fixed top-6 right-6 z-50">
-        <button
-          onClick={toggleTheme}
-          className={`p-3 rounded-full ${
-            isDark
-              ? "bg-gray-800 border border-gray-700 text-yellow-400 hover:bg-gray-700"
-              : "bg-gray-100 border border-gray-300 text-gray-900 hover:bg-gray-200"
-          } transition-all duration-300 shadow-lg`}
-          aria-label="Toggle theme"
-        >
-          {isDark ? <RiSunLine size={24} /> : <RiMoonLine size={24} />}
-        </button>
+      {isDark ? <RiSunLine size={24} /> : <RiMoonLine size={24} />}
+    </button>
+  </div>
+
+  {/* Background Layer */}
+  <div
+    className={` top-0 z-[-2] h-screen w-screen ${isDark ? "bg-black" : "bg-white"}`}
+    style={{
+      backgroundImage:
+        `${isDark ?' bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]':'radial-gradient(100% 50% at 50% 0%, rgba(0,163,255,0.13) 0, rgba(0,163,255,0) 50%, rgba(0,163,255,0) 100%)'}`,
+    }}
+  >
+    <div
+      className={`text-3xl font-bold text-center min-h-screen flex justify-center items-center flex-col ${
+        isDark ? "text-white" : "text-gray-900"
+      }`}
+    >
+      <div className="mx-5">
+        <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center mb-5">
+          {t.welcome}, I'm{" "}
+          <span
+            id="namehover"
+            className={`inline-flex bg-sky-400 px-2 py-1 vercelgeist ${
+              isDark ? "text-white" : "text-white"
+            }`}
+          >
+            Nikhil Yadav
+          </span>
+          . I write code, build ideas and real-world solutions.
+        </h3>
       </div>
 
       <div
-        className={`text-3xl font-bold text-center min-h-screen flex justify-center items-center flex-col ${isDark ? "text-white" : "text-gray-900"}`}
+        className={`w-48 h-15 ${
+          isDark ? "text-white" : "text-gray-900"
+        } relative inline-block overflow-hidden rounded-full p-[2px] mt-10`}
       >
-        <div className="mx-5">
-          <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center mb-5">
-            {t.welcome}, I'm{" "}
-            <span
-            id="namehover"
-              className={`inline-flex bg-sky-400 px-2 py-1 vercelgeist ${isDark ? "text-white" : "text-white"}`}
-            >
-              Nikhil Yadav
-            </span>
-
-            . I write code, build ideas and real-world solutions.
-          </h3>
-         
-        </div>
         <div
-          className={`w-48 h-15 ${isDark ? "text-white" : "text-gray-900"} relative inline-block overflow-hidden rounded-full p-[2px] mt-10`}
+          className={`inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full ${
+            isDark
+              ? "bg-gray-900 border-[1px] border-white hover:bg-gray-700"
+              : "bg-gray-100 border-[1px] border-gray-900 hover:bg-gray-200"
+          } px-3 py-1 text-2xl font-semibold backdrop-blur-3xl transition-colors`}
         >
-          <div
-            className={`inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full ${
-              isDark
-                ? "bg-gray-900 border-[1px] border-white hover:bg-gray-700"
-                : "bg-gray-100 border-[1px] border-gray-900 hover:bg-gray-200"
-            } px-3 py-1 text-2xl font-semibold backdrop-blur-3xl transition-colors`}
+          <a
+            href="https://www.linkedin.com/in/nikhil0148"
+            target="_blank"
+            className="flex gap-1 text-[20px] items-center"
           >
-            <a
-              href="https://www.linkedin.com/in/nikhil0148"
-              target="_blank"
-              className="flex gap-1 text-[20px] items-center"
-            >
-              Let's Connect ↗
-            </a>
-          </div>
+            Let's Connect ↗
+          </a>
         </div>
       </div>
+    </div>
+  </div>
 
-{/* <TooltipCardDemo /> */}
+
+{/* <div
+  className=""
+  style={{
+    backgroundImage: "url('https://pagedone.io/asset/uploads/1688031162.jpg')"
+  }}
+>
+
+  </div> */}
 
 
       <div className="flex justify-center items-center ">
@@ -163,9 +185,9 @@ function NewHome() {
           className={`${isDark ? "bg-bottom-white" : "bg-bottom-gray-100"} bg-opacity-50`}
         >
           <img
-            src="/images/IMG_20250414_000354954_HDR~2.jpg"
+            src="./images/IMG_20250414_000354954_HDR~2.jpg"
             alt="are yaar tu kha chla gya"
-            className="w-94 h-94 object-cover rounded-full"
+            className="w-50 h-60  rounded-lg hover:shadow-gray-500 hover:shadow-lg transition duration-3s ease-in"
           />
           {/* {isDark ? (
             <img src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
@@ -296,23 +318,31 @@ function NewHome() {
         ))}
       </div>
 
-      <div
-        className={`flex flex-col items-center py-10 px-4 ${isDark ? "bg-black" : "bg-white"}`}
-      >
-        <div className="flex flex-col items-center w-full max-w-7xl">
-          <div
-            className={`${isDark ? "bg-gray-900 text-gray-300" : "bg-gray-50 border border-gray-200"} p-4 rounded shadow-lg w-full overflow-x-auto flex justify-center`}
-          >
-            <GitHubCalendar
-              username="experimenthim0"
-              blockSize={window.innerWidth < 768 ? 4.5 : 12}
-              blockMargin={window.innerWidth < 768 ? 2 : 4}
-              fontSize={window.innerWidth < 768 ? 10 : 14}
-              colorScheme={isDark ? "dark" : "light"}
-            />
-          </div>
-        </div>
+     <div
+  className={`flex flex-col items-center py-10 px-4 ${
+    isDark ? "bg-black" : "bg-white"
+  }`}
+>
+  <div className="flex flex-col items-center w-full max-w-7xl">
+    <div
+      className={`${
+        isDark
+          ? "bg-gray-900 text-gray-300"
+          : "bg-gray-50 border border-gray-200"
+      } p-4 rounded shadow-lg w-full overflow-x-auto flex justify-center`}
+    >
+      <div className="w-full sm:w-auto">
+        <GitHubCalendar
+          username="experimenthim0"
+          blockSize={12}
+          blockMargin={4}
+          fontSize={14}
+          colorScheme={isDark ? "dark" : "light"}
+        />
       </div>
+    </div>
+  </div>
+</div>
 
       <div className="relative mx-auto max-w-md flex justify-center items-center py-10">
         <div className="h-8 w-20 bg-sky-500 z-20 absolute top-6 right-18 rotate-45">
@@ -528,14 +558,13 @@ const TooltipCard = () => {
   return (
     <div>
       <img
-        src="https://cdn-icons-png.flaticon.com/512/9187/9187532.png"
+        src="/images/IMG_20251119_132225998_HDR.jpg"
         alt="Nikhil"
-        className="aspect-square w-full rounded-sm" />
+        className="aspect-square w-full rounded-sm object-cover" />
       <div className="my-4 flex flex-col">
         <p className="text-lg font-bold">Nikhil Yadav</p>
         <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
-           Developer from NITJ. Enthusiastic and exhibits
-          entrepreneurial spirit.
+           A Student and Developer
         </p>
       </div>
     </div>

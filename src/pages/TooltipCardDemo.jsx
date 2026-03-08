@@ -50,7 +50,7 @@ const TooltipCard = () => {
   return (
     <div>
       <img
-        src="/images/IMG_20251119_132225998_HDR.jpg"
+        src="./images/IMG_20251119_132225998_HDR.jpg"
         alt="Tyler Durden"
         className="aspect-square w-full rounded-sm" />
       <div className="my-4 flex flex-col">
