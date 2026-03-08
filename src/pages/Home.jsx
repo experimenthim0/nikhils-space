@@ -162,16 +162,16 @@ function NewHome() {
         <div
           className={`${isDark ? "bg-bottom-white" : "bg-bottom-gray-100"} bg-opacity-50`}
         >
-          {/* <img
-            src="/images/nikhil-1.jpg"
+          <img
+            src="/images/IMG_20250414_000354954_HDR~2.jpg"
             alt="are yaar tu kha chla gya"
             className="w-94 h-94 object-cover rounded-full"
-          /> */}
-          {isDark ? (
+          />
+          {/* {isDark ? (
             <img src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
           ) : (
             <img src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=Black&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
-          )}
+          )} */}
         </div>
         <div className="mt-5 text-center max-w-xl">
           <div
