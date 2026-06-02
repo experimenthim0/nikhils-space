@@ -31,7 +31,9 @@ import { TooltipCardDemo } from "./TooltipCardDemo";
 
 function NewHome() {
   const [showAlert, setShowAlert] = useState(false);
-  const [isDark, setIsDark] = useState(false); 
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem("theme") === "dark" || false;
+  });
 
   useEffect(() => {
     document.title = `Nikhil Yadav`;
@@ -64,12 +66,21 @@ function NewHome() {
   };
 
   const toggleTheme = () => {
-    setIsDark(!isDark);
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    localStorage.setItem("theme", nextDark ? "dark" : "light");
   };
 
   const t = translations[language];
 
   const project = [
+    {
+      name: "Quickpipe",
+      link: "/quickpipe",
+      description:
+        "A lightweight multi-device sync pipeline to instantly share links and text between your browser and phone.",
+      imgsrc: "/quickpipe.png",
+    },
     {
       name: "Ai&Code Way",
       link: "https://aiandcodeway.netlify.app/",
@@ -250,13 +261,23 @@ function NewHome() {
             <p className={`${isDark ? "text-gray-300" : "text-gray-700"} mb-4`}>
               {proj.description}
             </p>
-            <a
-              href={proj.link}
-              target="_blank"
-              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-300 ease-in-out"
-            >
-              View Live
-            </a>
+            {proj.link.startsWith("/") ? (
+              <Link
+                to={proj.link}
+                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-300 ease-in-out text-center"
+              >
+                View Live
+              </Link>
+            ) : (
+              <a
+                href={proj.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-300 ease-in-out text-center"
+              >
+                View Live
+              </a>
+            )}
           </div>
         ))}
       </div>
@@ -345,11 +366,11 @@ function NewHome() {
 </div>
 
       <div className="relative mx-auto max-w-md flex justify-center items-center py-10">
-        <div className="h-8 w-20 bg-sky-500 z-20 absolute top-6 right-18 rotate-45">
+        {/* <div className="h-8 w-20 bg-sky-500 z-20 absolute top-6 right-18 rotate-45">
           <p className="text-white text-2xl font-semibold text-center flex items-center justify-center">
             Now
           </p>
-        </div>
+        </div> */}
         <h2
           className={`font-bold text-3xl ${isDark ? "text-white" : "text-gray-900"} text-center mb-5`}
         >
@@ -365,7 +386,7 @@ function NewHome() {
         </h2>
       </div>
 
-      <div
+   {/*    <div
         className={`w-full flex justify-center items-center flex-col ${isDark ? "text-white" : "text-gray-900"} mt-2 gap-2 mb-10`}
       >
         <div
@@ -380,13 +401,14 @@ function NewHome() {
         >
           <RiChatSmile2Line size={20} />
           <p>ChatWithMe</p>
-        </div>
+        </div> 
         <p
           className={`${isDark ? "text-gray-400" : "text-gray-600"} text-[14px]`}
         >
           Time : 12:00 PM - 8:00 PM
         </p>
       </div>
+      */}
 
       <div className="flex justify-center items-center gap-5 flex-wrap">
         {[

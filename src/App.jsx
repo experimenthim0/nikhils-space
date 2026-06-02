@@ -8,31 +8,18 @@ import React from "react";
 
 import Home from "./pages/Home.jsx";
 import Supportme from "./pages/Supportme.jsx";
-
-
-
-
-
-
-
+import Checkout from "./pages/Checkout.jsx";
+import Quickpipe from "./pages/Quickpipe.jsx";
 
 function App() {
-
- 
-
-
   return (
     <>
-
-<Routes>
-  <Route path="/" element={<Home />} />
-  
-
-  <Route path="/supportme" element={<Supportme/>} />
-
-</Routes>
-
-
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/supportme" element={<Supportme />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/quickpipe" element={<Quickpipe />} />
+      </Routes>
     </>
   );
 }
