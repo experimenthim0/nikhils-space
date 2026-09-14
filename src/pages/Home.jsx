@@ -318,7 +318,7 @@ export default function Home() {
               <h1
                 className={`text-[18px] font-bold tracking-tight ${textWhite} cursor-grab inline-block`}
               >
-                Nikhil Yadav
+                Nikhil Yadav <span className={`text-xs  ${textSecondary}`}>{ "( निखिल / NIKHIM )"}</span>
               </h1>
 
               {/* Fixed Avatar Popup centered right below Nikhil Yadav */}
@@ -407,7 +407,7 @@ export default function Home() {
           </p>
 
           <p className="animate-blur-fade fade-delay-3">
-            Off the clock, I play badminton, watch{" "}
+            Off the clock, I play cricket ( Bowling ), watch{" "}
             <span
               className="relative inline-block"
               onMouseEnter={() => setHoveredEntity("films")}
@@ -853,7 +853,8 @@ export default function Home() {
 
         {/* SUBTLE MINIMAL FOOTER */}
         <footer className={`mt-16 pt-8 border-t ${borderColor} text-xs ${textTertiary} flex items-center justify-between`}>
-          <span>© 2026 Nikhil Yadav</span>
+          <span>© 2026 NIKHIM</span>
+          <span>303804</span>
         </footer>
       </div>
     </div>
