@@ -1,618 +1,861 @@
-import { useState, useEffect } from "react";
-"use client";
-import { Tooltip } from "@/components/ui/tooltip-card";
-import { Route, Routes, Router, Link } from "react-router-dom";
-import "../App.css";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-import ContactForm from "./Contact.jsx";
 import { GitHubCalendar } from "react-github-calendar";
-import { neko } from "onekojs";
-
-import React from "react";
-import translations from "../js/translation.js";
+import { fetchRecentTrackData } from "../js/musicplayer.js";
 import {
-  RiLinkedinFill,
-  RiTwitterXLine,
-  RiGithubLine,
-  RiP2pLine,
-  RiMailLine,
-  RiMapPin2Line,
-  RiDiscordLine,
-  RiEarthLine,
-  RiChatSmile2Line,
-  RiHeart2Fill,
-  RiHeart3Line,
   RiSunLine,
   RiMoonLine,
+  RiCloseLine,
+  RiArrowRightUpLine,
 } from "@remixicon/react";
-import getRecentTrack from "../js/musicplayer.js";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { TooltipCardDemo } from "./TooltipCardDemo";
+import "../App.css";
 
-function NewHome() {
-  const [showAlert, setShowAlert] = useState(false);
+export default function Home() {
   const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem("theme") === "dark" || false;
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
-  useEffect(() => {
-    document.title = `Nikhil Yadav`;
-  }, []);
+  const [localTime, setLocalTime] = useState("");
+  const [visitorLocation, setVisitorLocation] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [hoveredProject, setHoveredProject] = useState(null);
+  const [hoveredEntity, setHoveredEntity] = useState(null); // 'avatar' | 'music' | 'films' | 'github'
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [contactStatus, setContactStatus] = useState("idle");
+  const [contactResult, setContactResult] = useState("");
 
-  useEffect(() => {
-    getRecentTrack();
-    setInterval(getRecentTrack, 10000);
+  const [trackData, setTrackData] = useState({
+    song: "Loading track...",
+    artist: "Spotify / Last.fm",
+    albumArt:
+      "https://media.istockphoto.com/id/2204659981/vector/abstract-smooth-colorful-light-background.jpg?s=612x612&w=0&k=20&c=pFX2KiJlnQUD18dWm1zbKJMfjiqHV_ZRaSd-lPgDgx0=",
+    isPlaying: false,
+    url: "https://www.last.fm/user/nikhil0148",
   });
 
+  // Page title
   useEffect(() => {
-    neko();
+    document.title = "Nikhil Yadav";
   }, []);
 
+  // Sync theme with HTML root and body
   useEffect(() => {
-    setShowAlert(true);
-    const timer = setTimeout(() => {
-      setShowAlert(false);
-    }, 3000);
+    const root = document.documentElement;
+    const body = document.body;
+    if (isDark) {
+      root.classList.add("dark");
+      body.classList.add("dark");
+      root.setAttribute("data-theme", "dark");
+      body.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      body.classList.remove("dark");
+      root.setAttribute("data-theme", "light");
+      body.setAttribute("data-theme", "light");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
 
-    return () => clearTimeout(timer);
+  // Oneko cat animation
+  useEffect(() => {
+    try {
+      neko();
+    } catch (e) {
+      // safe fallback
+    }
   }, []);
 
-  const [isChecked, setIsChecked] = useState(false);
-  const [language, setLanguage] = useState("en");
+  // Local clock set to Jaipur, Rajasthan (Asia/Kolkata timezone)
+  useEffect(() => {
+    const updateTime = () => {
+      const formatted = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Kolkata",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+        .format(new Date())
+        .toLowerCase();
+      setLocalTime(formatted);
+    };
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-    setLanguage(isChecked ? "en" : "rj");
-  };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Visitor Location via IP Geolocation
+  useEffect(() => {
+    let isMounted = true;
+    const getLocation = async () => {
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.city && isMounted) {
+            setVisitorLocation(`${data.city}, ${data.country_code || data.country_name}`);
+            return;
+          }
+        }
+      } catch (e) {}
+
+      try {
+        const res2 = await fetch("https://ipwho.is/");
+        if (res2.ok) {
+          const data2 = await res2.json();
+          if (data2.city && isMounted) {
+            setVisitorLocation(`${data2.city}, ${data2.country_code}`);
+          }
+        }
+      } catch (e2) {}
+    };
+
+    getLocation();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Fetch Music data for hover card
+  useEffect(() => {
+    let isMounted = true;
+    const updateMusic = async () => {
+      const data = await fetchRecentTrackData();
+      if (isMounted && data) {
+        setTrackData(data);
+      }
+    };
+    updateMusic();
+    const timer = setInterval(updateMusic, 20000);
+    return () => {
+      isMounted = false;
+      clearInterval(timer);
+    };
+  }, []);
 
   const toggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    localStorage.setItem("theme", nextDark ? "dark" : "light");
+    setIsDark((prev) => !prev);
   };
 
-  const t = translations[language];
+  const handleMouseMove = (e) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  };
 
-  const project = [
+  const onContactSubmit = async (e) => {
+    e.preventDefault();
+    setContactStatus("loading");
+    setContactResult("Sending...");
+    const formData = new FormData(e.target);
+    formData.append("access_key", "d6fed9d1-8a56-42f7-9069-f7910afcb11b");
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setContactStatus("success");
+        setContactResult("Message sent. I will get back to you shortly.");
+        e.target.reset();
+      } else {
+        setContactStatus("error");
+        setContactResult(data.message || "Failed to send message.");
+      }
+    } catch (err) {
+      setContactStatus("error");
+      setContactResult("Failed to send message.");
+    }
+  };
+
+  // Filter contributions to last 6 months only
+  const selectLastHalfYear = (contributions) => {
+    const current = new Date();
+    const pastDate = new Date();
+    pastDate.setMonth(current.getMonth() - 6);
+
+    return contributions.filter((activity) => {
+      const date = new Date(activity.date);
+      return date >= pastDate && date <= current;
+    });
+  };
+
+  // Precise hierarchy color constants matching the 6 BG & 7 Text color system
+  const textWhite = isDark ? "text-[#ffffff]" : "text-[#000000]";
+  const textPrimary = isDark ? "text-[#f2f2f2]" : "text-[#000000]";
+  const textBody = isDark ? "text-[#f2f2f2e6]" : "text-[#000000]";
+  const textSecondary = isDark ? "text-[#f2f2f2b3]" : "text-[#464646]";
+  const textTertiary = isDark ? "text-[#dedede66]" : "text-[#6b6b6b]";
+  const textMidGray = isDark ? "text-[#b1b1b1]" : "text-[#6b6b6b]";
+  
+  const bgDarkBase = isDark ? "bg-[#1a1a1a]" : "bg-white";
+  const bgTranslucent = isDark ? "bg-[#f2f2f21a]" : "bg-neutral-100";
+  const bgSubtleHover = isDark ? "hover:bg-[#fafafa0d]" : "hover:bg-neutral-50";
+  const borderColor = isDark ? "border-[#464646]" : "border-neutral-300";
+  const dividerColor = isDark ? "divide-[#464646]" : "divide-neutral-200";
+
+  const projects = [
     {
-      name: "Quickpipe",
-      link: "/quickpipe",
-      description:
-        "A lightweight multi-device sync pipeline to instantly share links and text between your browser and phone.",
-      imgsrc: "/quickpipe.png",
+      year: "2026",
+      name: "JankariTag",
+      type: "QR smart tagging platform",
+      url: "https://jankaritag.in",
+      displayUrl: "jankaritag.in",
+      hook: "Most QR codes just open links. JankariTag connects physical objects to intelligent digital services.",
+      paragraphs: [
+        "A QR-based smart tagging platform designed to connect physical objects with useful digital information and services. Developed under Under Yadav Devs to solve everyday communication and maintenance challenges through simple, lightweight QR technology.",
+        "VehicleTag allows vehicle owners to attach a privacy-focused QR tag so anyone can communicate with them without exposing private phone numbers, alongside automated reminders for insurance, PUC, and servicing.",
+        "WaterCare brings smart asset management to institutional environments like colleges, hostels, and campuses. Users scan to report leaks, cooling, or TDS issues, while maintenance teams log filter replacements and servicing history.",
+        "Currently my sole active project, built as a full-stack platform using React, Vite, Tailwind CSS, Node.js, Express.js, and MongoDB.",
+      ],
+      bullets: [
+        "VehicleTag: Privacy-first driver messaging & automated document alerts.",
+        "WaterCare: Campus QR reporting for cooling, TDS & filter maintenance.",
+        "Instant mobile scan: Zero app downloads or accounts required.",
+        "Centralized admin dashboard with live audit and maintenance records.",
+      ],
+      primaryActionText: "JankariTag.in",
+      primaryActionLink: "https://jankaritag.in",
+      isPrimaryInternal: false,
+      secondaryActionText: "Under Yadav Devs",
+      secondaryActionLink: "https://github.com/experimenthim0",
+      imgsrc: "/jtlogo.png",
+      iconSrc: "/jtlogo.png",
     },
     {
-      name: "Ai&Code Way",
-      link: "https://aiandcodeway.netlify.app/",
-      description: "A platform to explore AI tools and coding resources.",
+      year: "2026",
+      name: "CampusNode",
+      type: "Campus community platform",
+      url: "https://campusnode.in",
+      displayUrl: "campusnode.in",
+      hook: "Bringing college events, clubs, announcements, and resources into one place.",
+      paragraphs: [
+        "A platform built for college campuses starting with NIT Jalandhar to bring events, clubs, announcements, and academic resources into a single unified space.",
+      ],
+      bullets: [
+        "Centralized hub for college clubs, events, and campus updates.",
+        "Student resources and peer collaboration directory.",
+        "Engineered for fast, mobile-friendly access across departments.",
+      ],
+      primaryActionText: "CampusNode",
+      primaryActionLink: "https://campusnode.in",
+      isPrimaryInternal: false,
       imgsrc: "/images/aincode.png",
+      iconSrc: "/favicon.svg",
     },
     {
+      year: "2024",
+      name: "Ai&Code Way",
+      type: "Developer directory",
+      url: "https://aiandcodeway.netlify.app",
+      displayUrl: "aiandcodeway.netlify.app",
+      hook: "Curated tooling index for the modern AI engineering landscape.",
+      paragraphs: [
+        "A focused discovery platform and directory indexing cutting-edge AI tools, frameworks, and coding resources for software builders.",
+      ],
+      bullets: [
+        "Curated index of practical AI developer tooling.",
+        "Categorized by engineering workflows and utility.",
+        "Clean, distraction-free search and directory layout.",
+      ],
+      primaryActionText: "Visit Directory",
+      primaryActionLink: "https://aiandcodeway.netlify.app/",
+      isPrimaryInternal: false,
+      secondaryActionText: "Explore Tools",
+      secondaryActionLink: "https://aiandcodeway.netlify.app/",
+      imgsrc: "/images/aincode.png",
+      iconSrc: "/images/aincode.png",
+    },
+    {
+      year: "2024",
       name: "LifeDay Dots",
-      link: "https://chromewebstore.google.com/detail/lifeday-dots/dmpongfigiibmadlbibagpopfomoeoee",
-      description:
-        "A minimal Chrome extension that shows time passing through daily dots, reminding you that every day counts.",
+      type: "Chrome extension",
+      url: "https://chromewebstore.google.com/detail/lifeday-dots/dmpongfigiibmadlbibagpopfomoeoee",
+      displayUrl: "chromewebstore.google.com",
+      hook: "A silent, grounding mindfulness reminder on every new tab.",
+      paragraphs: [
+        "A minimal Chrome extension that visualizes human lifetime through daily dots, creating a silent reminder that every single day counts.",
+      ],
+      bullets: [
+        "Dynamic daily dot grid showing time lived and days ahead.",
+        "Zero permissions requested, 100% offline & privacy-first.",
+        "Manifest V3 compliant with zero background battery drain.",
+      ],
+      primaryActionText: "Chrome Web Store",
+      primaryActionLink:
+        "https://chromewebstore.google.com/detail/lifeday-dots/dmpongfigiibmadlbibagpopfomoeoee",
+      isPrimaryInternal: false,
+      secondaryActionText: "Store listing",
+      secondaryActionLink:
+        "https://chromewebstore.google.com/detail/lifeday-dots/dmpongfigiibmadlbibagpopfomoeoee",
       imgsrc: "/images/lifedaydots.png",
+      iconSrc: "/images/lifedaydots.png",
     },
   ];
 
   return (
     <div
-  className={`min-h-screen w-full overflow-x-hidden ${isDark ? "bg-black" : "bg-white"} relative scroll-smooth myfont transition-colors duration-300`}
->
-  {/* Theme Switcher */}
-  <div className="fixed top-6 right-6 z-50">
-    <button
-      onClick={toggleTheme}
-      className={`p-3 rounded-full ${
-        isDark
-          ? "bg-gray-800 border border-gray-700 text-yellow-400 hover:bg-gray-700"
-          : "bg-gray-100 border border-gray-300 text-gray-900 hover:bg-gray-200"
-      } transition-all duration-300 shadow-lg`}
-      aria-label="Toggle theme"
+      onMouseMove={handleMouseMove}
+      className={`min-h-screen ${bgDarkBase} ${textBody} transition-colors duration-200 selection:bg-[#3b82f6] selection:text-white`}
     >
-      {isDark ? <RiSunLine size={24} /> : <RiMoonLine size={24} />}
-    </button>
-  </div>
+      {/* =========================================================================
+          MAIN EDITORIAL CONTAINER (Strict single column max-w-[620px])
+          ========================================================================= */}
+      <div className="max-w-[620px] mx-auto px-6 py-14 sm:py-20">
+        
+        {/* HEADER */}
+        <header className="flex items-start justify-between mb-8 animate-blur-fade">
+          <div>
+            <span
+              className="relative inline-block"
+            
+            >
+              <h1
+                className={`text-[18px] font-bold tracking-tight ${textWhite} cursor-grab inline-block`}
+              >
+                Nikhil Yadav
+              </h1>
 
-  {/* Background Layer */}
-  <div
-    className={` top-0 z-[-2] h-screen w-screen ${isDark ? "bg-black" : "bg-white"}`}
-    style={{
-      backgroundImage:
-        `${isDark ?' bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]':'radial-gradient(100% 50% at 50% 0%, rgba(0,163,255,0.13) 0, rgba(0,163,255,0) 50%, rgba(0,163,255,0) 100%)'}`,
-    }}
-  >
+              {/* Fixed Avatar Popup centered right below Nikhil Yadav */}
+              {hoveredEntity === "avatar" && (
+                <div className="absolute top-full left-0 pt-3 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
+                  <div
+                    className={`p-1.5 rounded-xl border shadow-2xl ${
+                      isDark ? "bg-[#1a1a1a] border-[#464646]" : "bg-white border-neutral-200/90"
+                    }`}
+                  >
+                    <img
+                      src="/images/nikhil-profile.jpg"
+                      onError={(e) => {
+                        e.currentTarget.src = "/images/nikhil-1.jpg";
+                      }}
+                      alt="Nikhil Yadav"
+                      className={`w-48 h-60 object-cover object-top rounded-lg border ${
+                        isDark ? "border-[#464646]" : "border-neutral-200"
+                      } shadow-xs`}
+                    />
+                    <p className={`text-[11px] text-center ${textSecondary} mt-2 font-medium`}>
+                      Nikhil Yadav • Jaipur, Rajasthan
+                    </p>
+                  </div>
+                </div>
+              )}
+            </span>
+            <p className={`text-sm ${textSecondary} mt-0.5 font-medium`}>
+              {localTime || "8:00pm"} in Jaipur, Rajasthan
+            </p>
+          </div>
+
+          {/* Theme Switcher Pill */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className={`flex items-center gap-1 p-1 rounded-full border transition-colors cursor-pointer ${
+              isDark
+                ? "border-[#464646] bg-[#f2f2f21a] text-[#f2f2f2] hover:border-[#6b6b6b]"
+                : "border-neutral-300 bg-neutral-100 text-neutral-700 hover:border-neutral-400"
+            }`}
+            aria-label="Toggle theme"
+            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <span
+              className={`p-1 rounded-full transition-all ${
+                !isDark ? "bg-white text-black shadow-xs" : isDark ? "text-[#dedede66]" : "text-neutral-500"
+              }`}
+            >
+              <RiSunLine size={13} />
+            </span>
+            <span
+              className={`p-1 rounded-full transition-all ${
+                isDark ? "bg-[#464646] text-[#ffffff] shadow-xs" : "text-neutral-500"
+              }`}
+            >
+              <RiMoonLine size={13} />
+            </span>
+          </button>
+        </header>
+
+        {/* BIO / EDITORIAL PARAGRAPHS */}
+        <div className={`space-y-4 text-[15px] leading-[1.7] font-medium ${textBody}`}>
+          <p className="animate-blur-fade fade-delay-1">
+            I’m building{" "}
+            <a
+              href="#jankaritag-showcase"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("jankaritag-showcase")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className={`font-bold underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] cursor-pointer transition-colors`}
+            >
+              JankariTag
+            </a>
+            , a QR-based platform for connecting physical assets with useful digital information. What started as a small idea for making campus and everyday asset management simpler has grown into a product I’m developing for real-world use.
+          </p>
+
+          <p className="animate-blur-fade fade-delay-2">
+            I currently study <strong className={textWhite}>Civil Engineering at NIT Jalandhar</strong>, where I’m also building{" "}
+            <strong className={textWhite}>CampusNode</strong>, a platform for bringing college events, clubs, announcements, and resources into one place. Alongside engineering, I work across product, design, and software to turn ideas into working products.
+          </p>
+
+          <p className="animate-blur-fade fade-delay-2">
+            I believe good products start with paying attention to problems people have simply learned to live with.
+          </p>
+
+          <p className="animate-blur-fade fade-delay-3">
+            Off the clock, I play badminton, watch{" "}
+            <span
+              className="relative inline-block"
+              onMouseEnter={() => setHoveredEntity("films")}
+              onMouseLeave={() => setHoveredEntity(null)}
+            >
+              <span
+                className={`cursor-pointer underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors`}
+              >
+                films
+              </span>
+
+              {/* Fixed Films Popup centered above "films" maintaining space */}
+             {hoveredEntity === "films" && (
+  <div className="absolute bottom-full left-1/2 -translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
     <div
-      className={`text-3xl font-bold text-center min-h-screen flex justify-center items-center flex-col ${
-        isDark ? "text-white" : "text-gray-900"
+      className={`p-3 rounded-lg border shadow-2xl w-[240px] text-left ${
+        isDark
+          ? "bg-[#141414] border-neutral-800 text-white"
+          : "bg-white border-neutral-300 text-neutral-900"
       }`}
     >
-      <div className="mx-5">
-        <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center mb-5">
-          {t.welcome}, I'm{" "}
-          <span
-            id="namehover"
-            className={`inline-flex bg-sky-400 px-2 py-1 vercelgeist ${
-              isDark ? "text-white" : "text-white"
-            }`}
-          >
-            Nikhil Yadav
-          </span>
-          . I write code, build ideas and real-world solutions.
-        </h3>
-      </div>
-
-      <div
-        className={`w-48 h-15 ${
-          isDark ? "text-white" : "text-gray-900"
-        } relative inline-block overflow-hidden rounded-full p-[2px] mt-10`}
+      <p
+        className={`text-xs font-semibold ${
+          isDark ? "text-white" : "text-[#111111]"
+        }`}
       >
-        <div
-          className={`inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full ${
-            isDark
-              ? "bg-gray-900 border-[1px] border-white hover:bg-gray-700"
-              : "bg-gray-100 border-[1px] border-gray-900 hover:bg-gray-200"
-          } px-3 py-1 text-2xl font-semibold backdrop-blur-3xl transition-colors`}
-        >
-          <a
-            href="https://www.linkedin.com/in/nikhil0148"
-            target="_blank"
-            className="flex gap-1 text-[20px] items-center"
-          >
-            Let's Connect ↗
-          </a>
-        </div>
-      </div>
+        Favorite Films
+      </p>
+      <p
+        className={`text-[11px] ${
+          isDark ? "text-[#a3a3a3]" : "text-[#555555]"
+        } mt-1 leading-relaxed`}
+      >
+        Mostly love stories. Apart from that, I’m a big fan of Irrfan Khan’s
+        films. Hollywood movies? Bhai, story hi samajh nahi aati.
+      </p>
     </div>
   </div>
-
-
-{/* <div
-  className=""
-  style={{
-    backgroundImage: "url('https://pagedone.io/asset/uploads/1688031162.jpg')"
-  }}
->
-
-  </div> */}
-
-
-      <div className="flex justify-center items-center ">
-        <h2
-          className={`font-bold text-3xl ${isDark ? "text-white" : "text-gray-900"} text-center mb-5`}
-        >
-          {t.aboutText}
-          <span
-            className={`max-w-14 h-0.5 ${isDark ? "bg-white" : "bg-gray-900"} z-20 absolute left-0 right-0 mx-auto mt-1/2 block`}
-          ></span>
-        </h2>
-      </div>
-
-      <div
-        className={`flex justify-center items-center ${isDark ? "text-white" : "text-gray-900"} flex-col sm:flex-row gap-15`}
-      >
-        <div
-          className={`${isDark ? "bg-bottom-white" : "bg-bottom-gray-100"} bg-opacity-50`}
-        >
-          <img
-            src="./images/IMG_20250414_000354954_HDR~2.jpg"
-            alt="are yaar tu kha chla gya"
-            className="w-50 h-60  rounded-lg hover:shadow-gray-500 hover:shadow-lg transition duration-3s ease-in"
-          />
-          {/* {isDark ? (
-            <img src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
-          ) : (
-            <img src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortWaved&accessoriesType=Blank&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=Black&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
-          )} */}
-        </div>
-        <div className="mt-5 text-center max-w-xl">
-          <div
-            className={`font-LostTumbler text-lg sm:text-xl md:text-2xl lg:text-2xl ${isDark ? "text-white" : "text-gray-800"} text-justify mx-5`}
-          >
-            Hi, I’m <Tooltip
-           containerClassName="text-neutral-600 dark:text-neutral-700"
-           content={<TooltipCard />}>
-           {" "}
-           <span className="cursor-pointer font-bold">Nikhil Yadav</span>
-         </Tooltip>. I’m a passionate developer and tech enthusiast dedicated to building innovative solutions that bridge the gap between complex problems and elegant code. Beyond the screen, you’ll find me on the badminton court, catching the latest films, or discovering new music. I love exploring emerging technologies and turning ambitious ideas into reality—let’s connect and build something amazing together.",
-     
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-center items-center">
-        <h2
-          className={`font-bold text-3xl ${isDark ? "text-white" : "text-gray-900"} text-center my-15`}
-        >
-          Projects
-          <br />
-          <span
-            className={`max-w-17 h-0.5 ${isDark ? "bg-white" : "bg-gray-900"} z-20 absolute left-0 right-0 mx-auto mt-1 block`}
-          ></span>
-          <p
-            className={`text-[14px] ${isDark ? "text-gray-400" : "text-gray-600"} mt-3`}
-          >
-            ({t.process})
-          </p>
-        </h2>
-      </div>
-
-      <div className="flex justify-center items-center gap-10 flex-wrap mb-10">
-        {project.map((proj, index) => (
-          <div
-            key={index}
-            className={`${
-              isDark
-                ? "bg-gray-800 bg-opacity-50 border-gray-400"
-                : "bg-gray-50 border-gray-300"
-            } border-2 border-dashed rounded-lg p-6 m-4 shadow-lg w-80 hover:scale-105 transform transition-transform duration-300 ease-in-out`}
-          >
-            <img
-              src={proj.imgsrc}
-              alt={proj.name}
-              className="w-full h-40 object-cover rounded-md mb-4"
-            />
-            <h3
-              className={`text-xl font-semibold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}
+)}
+            </span>{" "}
+            and listen to{" "}
+            <span
+              className="relative inline-block"
+              onMouseEnter={() => setHoveredEntity("music")}
+              onMouseLeave={() => setHoveredEntity(null)}
             >
-              {proj.name}
-            </h3>
-            <p className={`${isDark ? "text-gray-300" : "text-gray-700"} mb-4`}>
-              {proj.description}
-            </p>
-            {proj.link.startsWith("/") ? (
-              <Link
-                to={proj.link}
-                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-300 ease-in-out text-center"
-              >
-                View Live
-              </Link>
-            ) : (
               <a
-                href={proj.link}
+                href="https://www.last.fm/user/nikhil0148"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-300 ease-in-out text-center"
+                className={`cursor-pointer underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors`}
               >
-                View Live
+                music
               </a>
-            )}
-          </div>
-        ))}
-      </div>
 
-      <div className="flex justify-center items-center">
-        <h2
-          className={`font-bold text-3xl ${isDark ? "text-white" : "text-gray-900"} text-center mb-5`}
-        >
-          Skills
-          <span
-            className={`max-w-11 h-0.5 ${isDark ? "bg-white" : "bg-gray-900"} z-20 absolute left-0 right-0 mx-auto mt-1/2 block`}
-          ></span>
-        </h2>
-      </div>
+              {/* Fixed Music Popup (Spinning Vinyl Disc) centered above "music" maintaining space */}
+              {hoveredEntity === "music" && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
+                  <a
+                    href={trackData.url || "https://www.last.fm/user/nikhil0148"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group flex items-center gap-3.5 p-3 pr-5 rounded-2xl border shadow-2xl min-w-[285px] max-w-[320px] text-left cursor-pointer transition-all duration-200 block ${
+                      isDark
+                        ? "bg-[#1a1a1a] border-[#464646] hover:border-[#6b6b6b] text-[#ffffff]"
+                        : "bg-white border-neutral-200/90 hover:border-neutral-300 text-neutral-900"
+                    }`}
+                  >
+                    {/* Red spinning vinyl record with grooved texture and diamond album art */}
+                    <div className="relative w-15 h-15 shrink-0 flex items-center justify-center">
+                      <div className="w-15 h-15 rounded-full bg-[#dc2626] relative flex items-center justify-center shadow-md animate-spin-vinyl overflow-hidden">
+                        {/* 45° diamond square album art */}
+                        <div className="w-15 h-15 rotate-45 overflow-hidden border border-yellow-300/90 shadow-xs shrink-0 flex items-center justify-center bg-black">
+                          <img
+                            src={trackData.albumArt}
+                            alt="Album Art"
+                            className="w-15 h-15 -rotate-45 object-cover shrink-0 scale-125"
+                          />
+                        </div>
 
-      <div className="flex justify-center items-center gap-5 flex-wrap mb-10">
-        {[
-          "html-5-svgrepo-com.svg",
-          "css-3-svgrepo-com.svg",
-          "tailwind-svgrepo-com.svg",
-          "js-svgrepo-com.svg",
-          "react-svgrepo-com.svg",
-          "node-js-svgrepo-com.svg",
-          "express-js.webp",
-          "mongo-svgrepo-com.svg",
-          "python-svgrepo-com.svg",
-        ].map((img, idx) => (
-          <div
-            key={idx}
-            className="flex flex-col justify-center items-center gap-2"
-          >
-            <div
-              className={`p-3 ${isDark ? "bg-skill" : "bg-gray-100 shadow-md"} rounded-full`}
+                        {/* Center silver spindle ring and hole */}
+                        <div className="absolute w-3.5 h-3.5 rounded-full bg-white dark:bg-neutral-200 border border-neutral-400 flex items-center justify-center shadow-inner">
+                          <div className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Track metadata */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1.5">
+                        <h4 className={`font-semibold text-xs truncate ${textWhite}  transition-colors`}>
+                          {trackData.song || "Devil In A New Dress"}
+                        </h4>
+                        <RiArrowRightUpLine
+                          size={13}
+                          className={`${textSecondary} shrink-0  group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:rotate-45 transition-all duration-200`}
+                        />
+                      </div>
+                      <p className={`text-[11px] ${textSecondary} truncate mt-0.5`}>
+                        {trackData.artist || "Kanye West, Rick Ross"}
+                      </p>
+                      <div className={`border-t ${isDark ? "border-[#464646]" : "border-neutral-100"} my-1.5`} />
+                      <p className={`text-[10px] ${textTertiary}`}>
+                        {trackData.isPlaying ? "Listening right now" : "Last played 29 minutes ago"}
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              )}
+            </span>
+            .
+          </p>
+
+          <p className="animate-blur-fade fade-delay-3">
+            Reach me at{" "}
+            <span
+              className="relative inline-block"
+              onMouseEnter={() => setHoveredEntity("twitter")}
+              onMouseLeave={() => setHoveredEntity(null)}
             >
+              <a
+                href="https://twitter.com/nikhil0148"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors cursor-pointer`}
+              >
+                @nikhil0148
+              </a>
+
+              {/* Fixed Twitter Profile Popup centered above "@nikhil0148" maintaining space */}
+              {hoveredEntity === "twitter" && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
+                  <div
+                    className={`p-4 rounded-2xl border shadow-2xl w-[280px] text-left ${
+                      isDark ? "bg-[#1a1a1a] border-[#464646] text-[#ffffff]" : "bg-white border-neutral-200/90 text-neutral-900"
+                    }`}
+                  >
+                    {/* Avatar */}
+                    <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-[#464646] bg-[#f2f2f21a] p-[1.5px]">
+                      <img
+                        src="/images/nikhil-profile.jpg"
+                        onError={(e) => {
+                          e.currentTarget.src = "/images/nikhil-1.jpg";
+                        }}
+                        alt="Nikhil Yadav"
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    </div>
+
+                    {/* Name + Verified + Handle */}
+                    <div className="mt-2.5">
+                      <div className="flex items-center gap-1">
+                        <span className={`font-bold text-[14px] ${textWhite}`}>Nikhil</span>
+                        <svg
+                          viewBox="0 0 24 24"
+                          aria-label="Verified account"
+                          className="w-3.5 h-3.5 text-[#3b82f6] fill-current shrink-0"
+                        >
+                          <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.67-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91c-1.31.67-2.2 1.91-2.2 3.34s.89 2.67 2.2 3.34c-.46 1.39-.21 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z" />
+                        </svg>
+                        <span className={`text-xs ${textMidGray} ml-0.5`}>
+                          @nikhil0148
+                        </span>
+                      </div>
+
+                      {/* Bio copy */}
+                      <p className={`text-xs ${textBody} mt-2 leading-relaxed`}>
+                        Civil Engineering @NITJ · Building{" "}
+                        <span className="text-[#3b82f6] font-medium">@JankariTag</span> &{" "}
+                        <span className="text-[#3b82f6] font-medium">@CampusNode</span> · turn ideas into products
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </span>
+            ,{" "}
+            <a
+              href="mailto:contact.nikhim@gmail.com"
+              className={`underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors`}
+            >
+              contact.nikhim@gmail.com
+            </a>
+            , or on{" "}
+            <span
+              className="relative inline-block"
+              onMouseEnter={() => setHoveredEntity("github")}
+              onMouseLeave={() => setHoveredEntity(null)}
+            >
+              <a
+                href="https://github.com/experimenthim0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors cursor-pointer`}
+              >
+                GitHub
+              </a>
+
+              {/* Fixed GitHub Popup centered above "GitHub" maintaining space */}
+              {hoveredEntity === "github" && (
+                <div className="absolute bottom-full right-0 sm:left-1/2 sm:-translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
+                  <div
+                    className={`p-3.5 rounded-2xl border shadow-2xl w-[370px] text-left ${
+                      isDark ? "bg-[#1a1a1a] border-[#464646] text-[#ffffff]" : "bg-white border-neutral-200/90 text-black"
+                    }`}
+                  >
+                    {/* Top Calendar Heatmap */}
+                    <div className="overflow-x-auto max-w-[360px] py-1">
+                      <GitHubCalendar
+                        username="experimenthim0"
+                        transformData={selectLastHalfYear}
+                        blockSize={9.5}
+                        blockMargin={3}
+                        fontSize={10}
+                        colorScheme={isDark ? "dark" : "light"}
+                        labels={{
+                          totalCount: "{{count}} contributions in the last 6 months",
+                        }}
+                      />
+                    </div>
+
+                    {/* Bottom Profile Footer */}
+                    <div className={`mt-3 pt-3 border-t ${isDark ? "border-[#464646]" : "border-neutral-100"} flex items-center gap-3`}>
+                      <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-[#464646] bg-[#f2f2f21a] p-[1.5px]">
+                        <img
+                          src="./images/IMG_20250414_000354954_HDR~2.jpg"
+                          alt="Nikhil Yadav"
+                          className="w-full h-full rounded-full object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`font-bold text-xs ${textWhite}`}>Nikhil</span>
+                          <span className={`text-[11px] ${textMidGray}`}>
+                            experimenthim0
+                          </span>
+                        </div>
+                        <p className={`text-[11px] ${textSecondary} mt-0.5 truncate`}>
+                          Interfaces, physical tags, and the occasional pull request.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </span>
+            .
+          </p>
+        </div>
+
+        {/* 1PX HAIR-THIN DIVIDER */}
+        <hr className={`my-10 border-t ${borderColor} animate-blur-fade fade-delay-4`} />
+
+        {/* PROJECTS TABLE */}
+        <section className="mb-12 animate-blur-fade fade-delay-4">
+          {/* Table Column Labels */}
+          <div className={`flex items-center justify-between text-xs ${textSecondary} font-semibold mb-4 select-none`}>
+            <div className="flex items-center gap-6">
+              <span className="w-10">Year</span>
+              <span>Project</span>
+            </div>
+            <span>Type</span>
+          </div>
+
+          {/* Project Rows - Direct clickable links to project webpages with subtle #fafafa0d hover */}
+          <div className={`divide-y ${dividerColor}`}>
+            {projects.map((proj, idx) => (
+              <a
+                key={idx}
+                href={proj.url}
+                target={proj.url.startsWith("http") ? "_blank" : undefined}
+                rel={proj.url.startsWith("http") ? "noopener noreferrer" : undefined}
+                className={`group flex items-center justify-between py-3.5 px-2 -mx-2 rounded-lg cursor-pointer text-sm transition-colors block ${bgSubtleHover}`}
+              >
+                <div className="flex items-center gap-6 min-w-0">
+                  <span className={`w-10 ${textSecondary} shrink-0 font-medium`}>
+                    {proj.year}
+                  </span>
+                  <span className={`${textTertiary} mr-2`}>/</span>
+                  <span className={`font-bold ${textWhite} group-hover:underline underline-offset-4 truncate`}>
+                    {proj.name}
+                  </span>
+                </div>
+                <span className={`text-xs ${textSecondary} shrink-0 ml-4 font-medium flex items-center gap-1.5 group-hover:${textWhite} transition-colors`}>
+                  {proj.type}
+                  <RiArrowRightUpLine size={13} className="opacity-0 group-hover:opacity-100 text-[#3b82f6] transition-opacity shrink-0" />
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* 1PX HAIR-THIN DIVIDER */}
+        <hr className={`my-12 border-t ${borderColor} animate-blur-fade fade-delay-5`} />
+
+        {/* =========================================================================
+            JANKARITAG PERMANENT SHOWCASE
+            ========================================================================= */}
+        <section id="jankaritag-showcase" className="mb-14 scroll-mt-10 animate-blur-fade fade-delay-5">
+          {/* Header: Logo + Title + Link */}
+          <div className="flex items-center gap-3.5 mb-6">
+            <div className={`w-12 h-12 rounded-xl border ${isDark ? "border-[#464646] bg-[#f2f2f21a]" : "border-neutral-200 bg-white"} p-1 flex items-center justify-center shrink-0 shadow-xs`}>
               <img
-                src={`/images/${img}`}
-                alt={img.split("-")[0]}
-                className="w-16 h-16"
+                src="/jtlogo.png"
+                alt="JankariTag"
+                className="w-full h-full object-contain"
               />
             </div>
-            <span
-              className={`${isDark ? "text-white" : "text-gray-900"} text-center font-bold`}
-            >
-              {
-                [
-                  "HTML",
-                  "CSS",
-                  "Tailwind",
-                  "JS",
-                  "React",
-                  "NodeJs",
-                  "ExpressJs",
-                  "MongoDB",
-                  "Python",
-                ][idx]
-              }
-            </span>
-          </div>
-        ))}
-      </div>
-
-     <div
-  className={`flex flex-col items-center py-10 px-4 ${
-    isDark ? "bg-black" : "bg-white"
-  }`}
->
-  <div className="flex flex-col items-center w-full max-w-7xl">
-    <div
-      className={`${
-        isDark
-          ? "bg-gray-900 text-gray-300"
-          : "bg-gray-50 border border-gray-200"
-      } p-4 rounded shadow-lg w-full overflow-x-auto flex justify-center`}
-    >
-      <div className="w-full sm:w-auto">
-        <GitHubCalendar
-          username="experimenthim0"
-          blockSize={12}
-          blockMargin={4}
-          fontSize={14}
-          colorScheme={isDark ? "dark" : "light"}
-        />
-      </div>
-    </div>
-  </div>
-</div>
-
-      <div className="relative mx-auto max-w-md flex justify-center items-center py-10">
-        {/* <div className="h-8 w-20 bg-sky-500 z-20 absolute top-6 right-18 rotate-45">
-          <p className="text-white text-2xl font-semibold text-center flex items-center justify-center">
-            Now
-          </p>
-        </div> */}
-        <h2
-          className={`font-bold text-3xl ${isDark ? "text-white" : "text-gray-900"} text-center mb-5`}
-        >
-          {t.contact}
-          <span
-            className={`max-w-14 h-0.5 ${isDark ? "bg-white" : "bg-gray-900"} z-20 absolute left-0 right-0 mx-auto mt-1/2 block`}
-          ></span>
-          <p
-            className={`text-[18px] ${isDark ? "text-gray-400" : "text-gray-600"} mt-2 px-4`}
-          >
-            {t.contacttext}
-          </p>
-        </h2>
-      </div>
-
-   {/*    <div
-        className={`w-full flex justify-center items-center flex-col ${isDark ? "text-white" : "text-gray-900"} mt-2 gap-2 mb-10`}
-      >
-        <div
-          className={`inline-flex px-8 h-10 gap-1 items-center justify-center ${
-            isDark
-              ? "bg-white text-black hover:bg-gray-100/80"
-              : "bg-gray-900 text-white hover:bg-gray-800"
-          } py-1.5 rounded-full text-[18px] font-medium cursor-pointer transition-colors`}
-          onClick={() =>
-            window.open("https://duochatapp.netlify.app/", "_blank")
-          }
-        >
-          <RiChatSmile2Line size={20} />
-          <p>ChatWithMe</p>
-        </div> 
-        <p
-          className={`${isDark ? "text-gray-400" : "text-gray-600"} text-[14px]`}
-        >
-          Time : 12:00 PM - 8:00 PM
-        </p>
-      </div>
-      */}
-
-      <div className="flex justify-center items-center gap-5 flex-wrap">
-        {[
-          {
-            icon: RiLinkedinFill,
-            text: "LinkedIn",
-            link: "https://www.linkedin.com/in/nikhil0148",
-          },
-          {
-            icon: RiTwitterXLine,
-            text: "Twitter(X)",
-            link: "https://twitter.com/nikhil0148",
-          },
-          {
-            icon: RiGithubLine,
-            text: "GitHub",
-            link: "https://github.com/nikhilydv0148",
-          },
-          {
-            icon: RiP2pLine,
-            text: "Peerlist",
-            link: "https://peerlist.io/nikhil0148",
-          },
-          {
-            icon: RiDiscordLine,
-            text: "Discord",
-            link: "https://discord.gg/WKejKbMJ",
-          },
-          {
-            icon: RiMailLine,
-            text: "Email",
-            link: "mailto:contact.nikhim@gmail.com",
-          },
-        ].map((item, idx) => (
-          <a
-            key={idx}
-            className={`inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium ${
-              isDark
-                ? "bg-[#faf5ec23] backdrop-blur-[24px] border border-[#d2c6ad46] text-white hover:bg-[#faf5ec33]"
-                : "bg-gray-100 backdrop-blur-[24px] border border-gray-300 text-gray-900 hover:bg-gray-200"
-            } transition-colors`}
-            href={item.link}
-            target="_blank"
-          >
-            <item.icon size="14px" />
-            {item.text}
-          </a>
-        ))}
-      </div>
-
-      <ContactForm isDark={isDark} />
-
-      <div className="flex items-center my-10 myfont">
-        <div
-          className={`relative max-w-md mx-auto border-dashed border-[1.5px] ${
-            isDark ? "border-gray-400" : "border-gray-400"
-          } m-8 pt-4 px-6 rounded-lg ${
-            isDark
-              ? "bg-gradient-to-r from-gray-850 to-gray-950"
-              : "bg-gradient-to-r from-gray-50 to-gray-100"
-          } shadow-lg my-10`}
-        >
-          <p
-            className={`text-center text-xl font-bold ${isDark ? "text-white" : "text-gray-900"} mb-3 tracking-wide`}
-          >
-            Music Space
-          </p>
-          <span
-            className={`max-w-[20rem] border-t-2 border-dotted ${isDark ? "border-gray-400" : "border-gray-400"} z-20 absolute left-0 right-0 mx-auto -mt-0.5 block`}
-          ></span>
-          <div className="flex justify-center items-center flex-row gap-2 px-2 pt-4 mb-5">
-            <img
-              id="album"
-              alt="Album Cover"
-              className="w-13 h-13 rounded-full border-2 border-gray-400 shadow-md"
-            />
-            <div className="">
-              <p
-                id="track"
-                className={`font-semibold text-[17px] truncate w-50 ${isDark ? "text-white" : "text-gray-900"}`}
+            <div>
+              <h2 className={`text-[17px] font-semibold tracking-tight ${textWhite}`}>
+                JankariTag
+              </h2>
+              <a
+                href="https://jankaritag.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-xs ${textSecondary} hover:text-[#3b82f6] hover:underline block mt-0.5`}
               >
-                Loading...
-              </p>
-              <p id="artist"></p>
-              <p
-                className={`text-xs font-semibold ${isDark ? "text-gray-400" : "text-gray-600"} tracking-wide`}
-                id="playing"
-              >
-                Nikhim Music <span className="text-red-700"> • Offline </span>
-              </p>
+                www.jankaritag.in
+              </a>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div
-        className={`relative py-30 overflow-hidden border-t ${isDark ? "border-white/5" : "border-gray-200"}`}
-      >
-        <div className="relative max-w-7xl mx-auto px-6">
-          <div className="text-center">
-            <h3
-              className={`text-8xl md:text-9xl lg:text-[12rem] font-bold vercelgeist ${
-                isDark ? "text-gray-400" : "text-gray-400"
-              } uppercase leading-none tracking-tighter select-none`}
-            >
-              Nikhil Yadav
-            </h3>
+          {/* Hook */}
+          <p className={`text-[15px] font-semibold ${textWhite} mb-4 leading-snug`}>
+            Most physical assets feel disconnected. JankariTag connects them.
+          </p>
+
+          {/* Editorial Paragraphs */}
+          <div className={`space-y-3.5 text-[15px] leading-[1.7] ${textBody} mb-6`}>
+            <p>
+              A QR-based smart tagging platform designed to connect physical objects with useful digital information and services. Developed under Under Yadav Devs with a focus on solving everyday communication and maintenance problems through simple QR technology.
+            </p>
+
+            <p>
+              VehicleTag allows vehicle owners to attach a privacy-focused QR tag to their vehicles so that others can communicate with the owner without directly exposing their personal contact information. It can also support vehicle-related reminders such as insurance, PUC, servicing, and document updates.
+            </p>
+
+            <p>
+              WaterCare is designed for institutional environments such as colleges, hostels, and campuses. A QR sticker placed on a water cooler or RO system allows users to report issues such as leakage, poor cooling, taste problems, or maintenance requirements. Maintenance teams can update cleaning, TDS, filter replacement, and service records, creating a digital maintenance history for each unit.
+            </p>
+
+            <p>
+              I built JankariTag as a full-stack web platform, working across the frontend, backend, database, QR-based workflows, authentication, and administrative dashboards using React, Vite, Tailwind CSS, Node.js, Express.js, and MongoDB. I am currently working on this platform full-time.
+            </p>
           </div>
-        </div>
-        <p
-          className={` p-20 text-center ${isDark ? "text-white" : "text-gray-600"}`}
-        >
-          Made With ❤️ 
-        </p>
-      </div>
 
-      <div
-        className={`px-6 py-1 fixed bottom-4 right-1 transform -translate-x-1/5 z-50 
-                  rounded-4xl border-[1px] ${
-                    isDark
-                      ? "border-[#d2c6ad46] backdrop-blur-[25px] bg-[#faf5ec1a]"
-                      : "border-gray-300 backdrop-blur-[25px] bg-white/90"
-                  } shadow-md transition-colors`}
-      >
-        {[
-          {
-            icon: RiTwitterXLine,
-            link: "https://twitter.com/nikhil0148",
-            hover: "hover:text-gray-500",
-          },
-          {
-            icon: RiLinkedinFill,
-            link: "https://www.linkedin.com/in/nikhil0148",
-            hover: "hover:text-gray-400",
-          },
-          {
-            icon: RiGithubLine,
-            link: "https://github.com/nikhilydv0148",
-            hover: "hover:text-gray-400",
-          },
-          {
-            icon: RiHeart3Line,
-            link: "https://nikhim.me/supportme",
-            hover: "hover:text-pink-400",
-          },
-        ].map((item, idx) => (
-          <a
-            key={idx}
-            className={`inline-flex items-center gap-x-1.5 py-2.5 px-5 rounded-full text-xs font-medium ${
-              isDark ? "text-white" : "text-gray-900"
-            } ${item.hover} transition-colors`}
-            href={item.link}
-            target="_blank"
-          >
-            <item.icon size="24px" />
-          </a>
-        ))}
+          {/* Bullet List */}
+          <ul className={`space-y-2 mb-8 text-[14px] ${textMidGray}`}>
+            <li className="flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#b1b1b1] shrink-0"></span>
+              <span>VehicleTag: Anonymous owner messaging & automated renewal reminders.</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#b1b1b1] shrink-0"></span>
+              <span>WaterCare: Institutional QR reporting for cooling, TDS & filter servicing.</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#b1b1b1] shrink-0"></span>
+              <span>Works instantly via mobile scan. Zero app download required.</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#b1b1b1] shrink-0"></span>
+              <span>Centralized admin dashboard with live audit and maintenance records.</span>
+            </li>
+          </ul>
+
+          {/* Action Buttons (Solid Blue button #3b82f6) */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://jankaritag.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-lg text-xs font-semibold bg-[#3b82f6] text-[#ffffff] hover:opacity-90 transition-opacity shadow-xs cursor-pointer"
+            >
+              JankariTag.in
+            </a>
+          </div>
+        </section>
+
+        {/* OPTIONAL QUICK MESSAGE / DIRECT CONTACT */}
+        <section className={`pt-2 border-t ${borderColor}`}>
+          <div className="flex items-center justify-between py-2">
+            <span className={`text-xs ${textSecondary}`}>
+              Need to get in touch?
+            </span>
+            <button
+              onClick={() => setShowContactForm(!showContactForm)}
+              className={`text-xs ${textWhite} hover:text-[#3b82f6] underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] cursor-pointer transition-colors`}
+            >
+              {showContactForm ? "Hide form" : "Leave a note"}
+            </button>
+          </div>
+
+          {showContactForm && (
+            <form onSubmit={onContactSubmit} className="mt-4 space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your Name"
+                  required
+                  className={`w-full px-3 py-2 text-xs rounded border ${
+                    isDark ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff]" : "border-neutral-300 bg-white text-black"
+                  } placeholder-[#dedede66] outline-none focus:border-[#3b82f6]`}
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Your Email"
+                  required
+                  className={`w-full px-3 py-2 text-xs rounded border ${
+                    isDark ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff]" : "border-neutral-300 bg-white text-black"
+                  } placeholder-[#dedede66] outline-none focus:border-[#3b82f6]`}
+                />
+              </div>
+              <textarea
+                name="message"
+                rows="3"
+                placeholder="What are you building or inquiring about?"
+                required
+                className={`w-full px-3 py-2 text-xs rounded border ${
+                  isDark ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff]" : "border-neutral-300 bg-white text-black"
+                } placeholder-[#dedede66] outline-none focus:border-[#3b82f6] resize-none`}
+              ></textarea>
+              <div className="flex items-center justify-between">
+                <button
+                  type="submit"
+                  disabled={contactStatus === "loading"}
+                  className="px-4 py-2 rounded text-xs font-semibold bg-[#3b82f6] text-[#ffffff] hover:opacity-90 transition-opacity cursor-pointer"
+                >
+                  {contactStatus === "loading" ? "Sending..." : "Send Message"}
+                </button>
+                {contactResult && (
+                  <span className={`text-xs ${textSecondary}`}>
+                    {contactResult}
+                  </span>
+                )}
+              </div>
+            </form>
+          )}
+        </section>
+
+        {/* SUBTLE MINIMAL FOOTER */}
+        <footer className={`mt-16 pt-8 border-t ${borderColor} text-xs ${textTertiary} flex items-center justify-between`}>
+          <span>© 2026 Nikhil Yadav</span>
+        </footer>
       </div>
     </div>
   );
 }
-
-export default NewHome;
-
-
-
-
-const TooltipCard = () => {
-  return (
-    <div>
-      <img
-        src="/images/IMG_20251119_132225998_HDR.jpg"
-        alt="Nikhil"
-        className="aspect-square w-full rounded-sm object-cover" />
-      <div className="my-4 flex flex-col">
-        <p className="text-lg font-bold">Nikhil Yadav</p>
-        <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
-           A Student and Developer
-        </p>
-      </div>
-    </div>
-  );
-};
-
-const TestimonialCard = () => {
-  return (
-    <div className="">
-      <blockquote className="mb-4 text-neutral-700 dark:text-neutral-300">
-        This product is absolutely, grade A horse shit.
-      </blockquote>
-      <div className="flex items-center gap-2">
-        <img
-          src="https://assets.aceternity.com/screenshots/tyler.webp"
-          alt="Tyler Durden"
-          className="size-6 rounded-full object-cover" />
-        <div>
-          <p className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-            Tyler Durden
-          </p>
-          <p className="text-[10px] text-neutral-600 dark:text-neutral-400">
-            Senior Product Manager at FC
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};

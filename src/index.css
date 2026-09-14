@@ -1,29 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate"; 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
-body{
-   margin: 0;
+:root {
+  /* Specification Palette - Background Colors (6) */
+  --color-bg-subtle-hover: #fafafa0d;
+  --color-bg-translucent: #f2f2f21a;
+  --color-bg-accent: #3b82f6;
+  --color-bg-gray-mid: #6b6b6b;
+  --color-bg-gray-dark: #464646;
+  --color-bg-dark-base: #1a1a1a;
+
+  /* Specification Palette - Text Colors (7) */
+  --color-text-white: #ffffff;
+  --color-text-primary: #f2f2f2;
+  --color-text-body-90: #f2f2f2e6;
+  --color-text-secondary-70: #f2f2f2b3;
+  --color-text-tertiary-40: #dedede66;
+  --color-text-mid-gray: #b1b1b1;
+  --color-text-black: #000000;
+}
+
+html.dark, html.dark body, [data-theme="dark"], [data-theme="dark"] body {
+  background-color: #1a1a1a !important;
+  color: #f2f2f2 !important;
+}
+
+html, html body {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+*, *::before, *::after, body, html {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
   padding: 0;
   overflow-x: hidden;
-
-}
-
-#oneko {
-  /* This forces the browser to slide the cat smoothly between points */
-  transition: top 0.2s linear, left 0.2s linear !important;
-  background-color: transparent !important;
-  z-index: 9999 !important;
-}
-
-.bg-mine{
-  background: #000;
-  background-image: radial-gradient(#ffffff33,1px,#00091d,1px);
-  background-size: 20px 20px;
-}
-.bg-skill{
-  background: #102546;
+  font-weight: 500;
 }
 
 @theme inline {
