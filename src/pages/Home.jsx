@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { GitHubCalendar } from "react-github-calendar";
@@ -10,6 +10,7 @@ import {
   RiArrowRightUpLine,
 } from "@remixicon/react";
 import "../App.css";
+import asciiPortrait from "../assets/nikhil-yadav-ascii.txt?raw";
 
 export default function Home() {
   const [isDark, setIsDark] = useState(() => {
@@ -22,11 +23,92 @@ export default function Home() {
   const [visitorLocation, setVisitorLocation] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [hoveredProject, setHoveredProject] = useState(null);
-  const [hoveredEntity, setHoveredEntity] = useState(null); // 'avatar' | 'music' | 'films' | 'github'
+  const [hoveredEntity, setHoveredEntity] = useState(null); // 'avatar' | 'music' | 'films' | 'twitter' | 'github'
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showContactForm, setShowContactForm] = useState(false);
   const [contactStatus, setContactStatus] = useState("idle");
   const [contactResult, setContactResult] = useState("");
+
+  const popupRef = useRef(null);
+  const [popupOffset, setPopupOffset] = useState(0);
+  const [isFlippedY, setIsFlippedY] = useState(false);
+
+  // Auto-clamp active popup to strictly stay within the viewport bounds [16px, vw - 16px]
+  useEffect(() => {
+    if (!hoveredEntity) return;
+
+    const clampPopup = () => {
+      if (!popupRef.current) return;
+      const rect = popupRef.current.getBoundingClientRect();
+      const padding = 16;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      // Clamp horizontally within [padding, vw - padding]
+      if (rect.left < padding) {
+        setPopupOffset((prev) => prev + (padding - rect.left));
+      } else if (rect.right > vw - padding) {
+        setPopupOffset((prev) => prev - (rect.right - (vw - padding)));
+      }
+
+      // Flip vertically if top edge goes off-screen
+      if (rect.top < padding && (rect.bottom + rect.height + 20) < vh) {
+        setIsFlippedY(true);
+      }
+    };
+
+    const frame = requestAnimationFrame(clampPopup);
+    window.addEventListener("resize", clampPopup);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", clampPopup);
+    };
+  }, [hoveredEntity]);
+
+  // Detect whether device supports hover + fine pointer (desktop mouse vs touch)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const updatePointerType = () => {
+      setIsTouchDevice(!mediaQuery.matches);
+    };
+
+    updatePointerType();
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", updatePointerType);
+      return () => mediaQuery.removeEventListener("change", updatePointerType);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(updatePointerType);
+      return () => mediaQuery.removeListener(updatePointerType);
+    }
+  }, []);
+
+  // Handle outside click / tap and Escape key to close active popup on touch/mobile
+  useEffect(() => {
+    if (!hoveredEntity) return;
+
+    const handlePointerDown = (e) => {
+      // If tap/click is outside any popup container, dismiss
+      if (!e.target.closest("[data-popup-container]")) {
+        setHoveredEntity(null);
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setHoveredEntity(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [hoveredEntity]);
 
   const [trackData, setTrackData] = useState({
     song: "Loading track...",
@@ -140,6 +222,30 @@ export default function Home() {
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
+  };
+
+  // Trigger tap/click handler for mobile touch devices
+  const handleTriggerClick = (entity, e) => {
+    if (isTouchDevice) {
+      if (hoveredEntity === entity) {
+        // Tapping the same active item closes it
+        setHoveredEntity(null);
+      } else {
+        // Tapping an item opens its popup and prevents premature external navigation
+        if (e) {
+          e.preventDefault();
+        }
+        setHoveredEntity(entity);
+      }
+    }
+  };
+
+  // Keyboard accessibility for triggers
+  const handleTriggerKeyDown = (entity, e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setHoveredEntity((prev) => (prev === entity ? null : entity));
+    }
   };
 
   const handleMouseMove = (e) => {
@@ -301,7 +407,7 @@ export default function Home() {
   return (
     <div
       onMouseMove={handleMouseMove}
-      className={`min-h-screen ${bgDarkBase} ${textBody} transition-colors duration-200 selection:bg-[#3b82f6] selection:text-white`}
+      className={`min-h-screen ${bgDarkBase} ${textBody} transition-colors duration-200 selection:bg-[#3b82f6] selection:text-white overflow-x-clip`}
     >
       {/* =========================================================================
           MAIN EDITORIAL CONTAINER (Strict single column max-w-[620px])
@@ -313,19 +419,36 @@ export default function Home() {
           <div>
             <span
               className="relative inline-block"
-            
+              data-popup-container="avatar"
+              onMouseEnter={() => !isTouchDevice && setHoveredEntity("avatar")}
+              onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
+              onClick={(e) => handleTriggerClick("avatar", e)}
+              onKeyDown={(e) => handleTriggerKeyDown("avatar", e)}
+              role="button"
+              tabIndex={0}
+              aria-expanded={hoveredEntity === "avatar"}
+              aria-haspopup="dialog"
+              aria-label="Toggle profile preview"
             >
               <h1
-                className={`text-[18px] font-bold tracking-tight ${textWhite} cursor-grab inline-block`}
+                className={`text-[18px] font-bold tracking-tight ${textWhite} cursor-pointer inline-block`}
               >
                 Nikhil Yadav <span className={`text-xs  ${textSecondary}`}>{ "( निखिल / NIKHIM )"}</span>
               </h1>
 
-              {/* Fixed Avatar Popup centered right below Nikhil Yadav */}
+              {/* Fixed Avatar Popup centered right below Nikhil Yadav with bounds clamping */}
               {hoveredEntity === "avatar" && (
-                <div className="absolute top-full left-0 pt-3 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
+                <div
+                  ref={popupRef}
+                  style={{
+                    left: `calc(0px + ${popupOffset}px)`,
+                  }}
+                  className={`absolute ${
+                    isFlippedY ? "bottom-full pb-3" : "top-full pt-3"
+                  } z-50 block animate-in fade-in zoom-in-95 duration-150 max-w-[calc(100vw-32px)] pointer-events-auto`}
+                >
                   <div
-                    className={`p-1.5 rounded-xl border shadow-2xl ${
+                    className={`p-1.5 rounded-xl border shadow-2xl w-48 max-w-[calc(100vw-32px)] ${
                       isDark ? "bg-[#1a1a1a] border-[#464646]" : "bg-white border-neutral-200/90"
                     }`}
                   >
@@ -335,7 +458,7 @@ export default function Home() {
                         e.currentTarget.src = "/images/nikhil-1.jpg";
                       }}
                       alt="Nikhil Yadav"
-                      className={`w-48 h-60 object-cover object-top rounded-lg border ${
+                      className={`w-full h-60 object-cover object-top rounded-lg border ${
                         isDark ? "border-[#464646]" : "border-neutral-200"
                       } shadow-xs`}
                     />
@@ -410,67 +533,97 @@ export default function Home() {
             Off the clock, I play cricket ( Bowling ), watch{" "}
             <span
               className="relative inline-block"
-              onMouseEnter={() => setHoveredEntity("films")}
-              onMouseLeave={() => setHoveredEntity(null)}
+              data-popup-container="films"
+              onMouseEnter={() => !isTouchDevice && setHoveredEntity("films")}
+              onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
             >
               <span
+                role="button"
+                tabIndex={0}
+                aria-expanded={hoveredEntity === "films"}
+                aria-haspopup="dialog"
+                aria-label="Favorite films note"
+                onClick={(e) => handleTriggerClick("films", e)}
+                onKeyDown={(e) => handleTriggerKeyDown("films", e)}
                 className={`cursor-pointer underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors`}
               >
                 films
               </span>
 
-              {/* Fixed Films Popup centered above "films" maintaining space */}
-             {hoveredEntity === "films" && (
-  <div className="absolute bottom-full left-1/2 -translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
-    <div
-      className={`p-3 rounded-lg border shadow-2xl w-[240px] text-left ${
-        isDark
-          ? "bg-[#141414] border-neutral-800 text-white"
-          : "bg-white border-neutral-300 text-neutral-900"
-      }`}
-    >
-      <p
-        className={`text-xs font-semibold ${
-          isDark ? "text-white" : "text-[#111111]"
-        }`}
-      >
-        Favorite Films
-      </p>
-      <p
-        className={`text-[11px] ${
-          isDark ? "text-[#a3a3a3]" : "text-[#555555]"
-        } mt-1 leading-relaxed`}
-      >
-        Mostly love stories. Apart from that, I’m a big fan of Irrfan Khan’s
-        films. Hollywood movies? Bhai, story hi samajh nahi aati.
-      </p>
-    </div>
-  </div>
-)}
+              {/* Fixed Films Popup centered above "films" with viewport clamping */}
+              {hoveredEntity === "films" && (
+                <div
+                  ref={popupRef}
+                  style={{
+                    left: `calc(50% + ${popupOffset}px)`,
+                  }}
+                  className={`absolute ${
+                    isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
+                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                >
+                  <div
+                    className={`p-3 rounded-lg border shadow-2xl w-[min(240px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left ${
+                      isDark
+                        ? "bg-[#141414] border-neutral-800 text-white"
+                        : "bg-white border-neutral-300 text-neutral-900"
+                    }`}
+                  >
+                    <p
+                      className={`text-xs font-semibold ${
+                        isDark ? "text-white" : "text-[#111111]"
+                      }`}
+                    >
+                      Favorite Films
+                    </p>
+                    <p
+                      className={`text-[11px] ${
+                        isDark ? "text-[#a3a3a3]" : "text-[#555555]"
+                      } mt-1 leading-relaxed`}
+                    >
+                      Mostly love stories. Apart from that, I’m a big fan of Irrfan Khan’s
+                      films. Hollywood movies? Bhai, story hi samajh nahi aati.
+                    </p>
+                  </div>
+                </div>
+              )}
             </span>{" "}
             and listen to{" "}
             <span
               className="relative inline-block"
-              onMouseEnter={() => setHoveredEntity("music")}
-              onMouseLeave={() => setHoveredEntity(null)}
+              data-popup-container="music"
+              onMouseEnter={() => !isTouchDevice && setHoveredEntity("music")}
+              onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
             >
               <a
                 href="https://www.last.fm/user/nikhil0148"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-expanded={hoveredEntity === "music"}
+                aria-haspopup="dialog"
+                aria-label="Now playing track preview"
+                onClick={(e) => handleTriggerClick("music", e)}
+                onKeyDown={(e) => handleTriggerKeyDown("music", e)}
                 className={`cursor-pointer underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors`}
               >
                 music
               </a>
 
-              {/* Fixed Music Popup (Spinning Vinyl Disc) centered above "music" maintaining space */}
+              {/* Fixed Music Popup (Spinning Vinyl Disc) centered above "music" with viewport clamping */}
               {hoveredEntity === "music" && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
+                <div
+                  ref={popupRef}
+                  style={{
+                    left: `calc(50% + ${popupOffset}px)`,
+                  }}
+                  className={`absolute ${
+                    isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
+                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                >
                   <a
                     href={trackData.url || "https://www.last.fm/user/nikhil0148"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group flex items-center gap-3.5 p-3 pr-5 rounded-2xl border shadow-2xl min-w-[285px] max-w-[320px] text-left cursor-pointer transition-all duration-200 block ${
+                    className={`group flex items-center gap-3.5 p-3 pr-5 rounded-2xl border shadow-2xl w-[min(310px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left cursor-pointer transition-all duration-200 block ${
                       isDark
                         ? "bg-[#1a1a1a] border-[#464646] hover:border-[#6b6b6b] text-[#ffffff]"
                         : "bg-white border-neutral-200/90 hover:border-neutral-300 text-neutral-900"
@@ -525,24 +678,41 @@ export default function Home() {
             Reach me at{" "}
             <span
               className="relative inline-block"
-              onMouseEnter={() => setHoveredEntity("twitter")}
-              onMouseLeave={() => setHoveredEntity(null)}
+              data-popup-container="twitter"
+              onMouseEnter={() => !isTouchDevice && setHoveredEntity("twitter")}
+              onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
             >
               <a
                 href="https://twitter.com/nikhil0148"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-expanded={hoveredEntity === "twitter"}
+                aria-haspopup="dialog"
+                aria-label="Twitter profile preview"
+                onClick={(e) => handleTriggerClick("twitter", e)}
+                onKeyDown={(e) => handleTriggerKeyDown("twitter", e)}
                 className={`underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors cursor-pointer`}
               >
                 @nikhil0148
               </a>
 
-              {/* Fixed Twitter Profile Popup centered above "@nikhil0148" maintaining space */}
+              {/* Fixed Twitter Profile Popup centered above "@nikhil0148" with viewport clamping */}
               {hoveredEntity === "twitter" && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
-                  <div
-                    className={`p-4 rounded-2xl border shadow-2xl w-[280px] text-left ${
-                      isDark ? "bg-[#1a1a1a] border-[#464646] text-[#ffffff]" : "bg-white border-neutral-200/90 text-neutral-900"
+                <div
+                  ref={popupRef}
+                  style={{
+                    left: `calc(50% + ${popupOffset}px)`,
+                  }}
+                  className={`absolute ${
+                    isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
+                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                >
+                  <a
+                    href="https://twitter.com/nikhil0148"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`p-4 rounded-2xl border shadow-2xl w-[min(280px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left block cursor-pointer transition-colors ${
+                      isDark ? "bg-[#1a1a1a] border-[#464646] hover:border-[#6b6b6b] text-[#ffffff]" : "bg-white border-neutral-200/90 hover:border-neutral-300 text-neutral-900"
                     }`}
                   >
                     {/* Avatar */}
@@ -580,7 +750,7 @@ export default function Home() {
                         <span className="text-[#3b82f6] font-medium">@CampusNode</span> · turn ideas into products
                       </p>
                     </div>
-                  </div>
+                  </a>
                 </div>
               )}
             </span>
@@ -594,28 +764,42 @@ export default function Home() {
             , or on{" "}
             <span
               className="relative inline-block"
-              onMouseEnter={() => setHoveredEntity("github")}
-              onMouseLeave={() => setHoveredEntity(null)}
+              data-popup-container="github"
+              onMouseEnter={() => !isTouchDevice && setHoveredEntity("github")}
+              onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
             >
               <a
                 href="https://github.com/experimenthim0"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-expanded={hoveredEntity === "github"}
+                aria-haspopup="dialog"
+                aria-label="GitHub profile & contributions preview"
+                onClick={(e) => handleTriggerClick("github", e)}
+                onKeyDown={(e) => handleTriggerKeyDown("github", e)}
                 className={`underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] ${textWhite} hover:text-[#3b82f6] transition-colors cursor-pointer`}
               >
                 GitHub
               </a>
 
-              {/* Fixed GitHub Popup centered above "GitHub" maintaining space */}
+              {/* Fixed GitHub Popup centered above "GitHub" with viewport clamping */}
               {hoveredEntity === "github" && (
-                <div className="absolute bottom-full right-0 sm:left-1/2 sm:-translate-x-1/2 pb-3.5 z-50 hidden md:block animate-in fade-in zoom-in-95 duration-150">
+                <div
+                  ref={popupRef}
+                  style={{
+                    left: `calc(50% + ${popupOffset}px)`,
+                  }}
+                  className={`absolute ${
+                    isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
+                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                >
                   <div
-                    className={`p-3.5 rounded-2xl border shadow-2xl w-[370px] text-left ${
+                    className={`p-3.5 rounded-2xl border shadow-2xl w-[min(370px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left ${
                       isDark ? "bg-[#1a1a1a] border-[#464646] text-[#ffffff]" : "bg-white border-neutral-200/90 text-black"
                     }`}
                   >
                     {/* Top Calendar Heatmap */}
-                    <div className="overflow-x-auto max-w-[360px] py-1">
+                    <div className="overflow-x-auto max-w-full py-1">
                       <GitHubCalendar
                         username="experimenthim0"
                         transformData={selectLastHalfYear}
@@ -630,7 +814,12 @@ export default function Home() {
                     </div>
 
                     {/* Bottom Profile Footer */}
-                    <div className={`mt-3 pt-3 border-t ${isDark ? "border-[#464646]" : "border-neutral-100"} flex items-center gap-3`}>
+                    <a
+                      href="https://github.com/experimenthim0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`mt-3 pt-3 border-t ${isDark ? "border-[#464646] hover:bg-[#ffffff08]" : "border-neutral-100 hover:bg-neutral-50"} flex items-center gap-3 rounded-lg p-1 transition-colors cursor-pointer block`}
+                    >
                       <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-[#464646] bg-[#f2f2f21a] p-[1.5px]">
                         <img
                           src="./images/IMG_20250414_000354954_HDR~2.jpg"
@@ -649,7 +838,7 @@ export default function Home() {
                           Interfaces, physical tags, and the occasional pull request.
                         </p>
                       </div>
-                    </div>
+                    </a>
                   </div>
                 </div>
               )}
@@ -820,7 +1009,7 @@ export default function Home() {
                   placeholder="Your Email"
                   required
                   className={`w-full px-3 py-2 text-xs rounded border ${
-                    isDark ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff]" : "border-neutral-300 bg-white text-black"
+                    isDark ? "border-[#464646] bg-[#1a1a1a] text-[#575757]" : "border-neutral-300 bg-white text-black"
                   } placeholder-[#dedede66] outline-none focus:border-[#3b82f6]`}
                 />
               </div>
@@ -851,8 +1040,30 @@ export default function Home() {
           )}
         </section>
 
+          {/* FULL PHOTO-TO-ASCII ARTWORK */}
+        <section
+          className={`mt-14 pt-8 border-t ${borderColor} flex flex-col items-center select-none`}
+          aria-label="ASCII portrait of Nikhil Yadav"
+        >
+          <span className="sr-only">ASCII portrait of Nikhil Yadav</span>
+
+         
+          <div className="w-full max-w-full overflow-x-auto rounded-xl border border-[#464646]/30 dark:border-[#464646]/50 p-2 sm:p-4 bg-neutral-500/[0.02] dark:bg-white/[0.01]">
+            <pre
+              style={{ fontFamily: "monospace" }}
+              className={`m-0 w-max max-w-none whitespace-pre font-mono tracking-normal leading-none text-[6px] ${textTertiary} hover:${textWhite} transition-colors duration-300 cursor-default`}
+            >
+              {asciiPortrait}
+            </pre>
+          </div>
+
+          <div className={`mt-3 font-mono text-[9px] sm:text-[10px] ${textTertiary} opacity-60 self-center`}>
+            Nikhil Yadav
+          </div>
+        </section>
+
         {/* SUBTLE MINIMAL FOOTER */}
-        <footer className={`mt-16 pt-8 border-t ${borderColor} text-xs ${textTertiary} flex items-center justify-between`}>
+        <footer className={`mt-14 pt-6 border-t ${borderColor} text-xs ${textTertiary} flex items-center justify-between`}>
           <span>© 2026 NIKHIM</span>
           <span>303804</span>
         </footer>

@@ -39,6 +39,10 @@ html, html body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+pre, code, kbd, samp, .font-mono, [class*="font-mono"] {
+  font-family: monospace !important;
+}
+
 body {
   margin: 0;
   padding: 0;
