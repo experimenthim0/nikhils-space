@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 import { GitHubCalendar } from "react-github-calendar";
@@ -36,6 +36,8 @@ export default function Home() {
 
   // Auto-clamp active popup to strictly stay within the viewport bounds [16px, vw - 16px]
   useEffect(() => {
+    setPopupOffset(0);
+    setIsFlippedY(false);
     if (!hoveredEntity) return;
 
     const clampPopup = () => {
@@ -415,10 +417,10 @@ export default function Home() {
       <div className="max-w-[620px] mx-auto px-6 py-14 sm:py-20">
         
         {/* HEADER */}
-        <header className="flex items-start justify-between mb-8 animate-blur-fade">
+        <header className={`flex items-start justify-between mb-8 animate-blur-fade ${hoveredEntity === "avatar" ? "relative z-50" : ""}`}>
           <div>
             <span
-              className="relative inline-block"
+              className={`relative inline-block ${hoveredEntity === "avatar" ? "z-50" : ""}`}
               data-popup-container="avatar"
               onMouseEnter={() => !isTouchDevice && setHoveredEntity("avatar")}
               onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
@@ -445,11 +447,11 @@ export default function Home() {
                   }}
                   className={`absolute ${
                     isFlippedY ? "bottom-full pb-3" : "top-full pt-3"
-                  } z-50 block animate-in fade-in zoom-in-95 duration-150 max-w-[calc(100vw-32px)] pointer-events-auto`}
+                  } z-[100] block animate-in fade-in zoom-in-95 duration-150 max-w-[calc(100vw-32px)] pointer-events-auto`}
                 >
                   <div
                     className={`p-1.5 rounded-xl border shadow-2xl w-48 max-w-[calc(100vw-32px)] ${
-                      isDark ? "bg-[#1a1a1a] border-[#464646]" : "bg-white border-neutral-200/90"
+                      isDark ? "bg-[#1a1a1a] border-[#464646]" : "bg-white border-neutral-200/90 shadow-xl"
                     }`}
                   >
                     <img
@@ -520,19 +522,19 @@ export default function Home() {
             , a QR-based platform for connecting physical assets with useful digital information. What started as a small idea for making campus and everyday asset management simpler has grown into a product I’m developing for real-world use.
           </p>
 
-          <p className="animate-blur-fade fade-delay-2">
-            I currently study <strong className={textWhite}>Civil Engineering at NIT Jalandhar</strong>, where I’m also building{" "}
-            <strong className={textWhite}>CampusNode</strong>, a platform for bringing college events, clubs, announcements, and resources into one place. Alongside engineering, I work across product, design, and software to turn ideas into working products.
-          </p>
+         <p className="animate-blur-fade fade-delay-2">
+  I’m currently studying <strong className={textWhite}>Civil Engineering at NIT Jalandhar</strong>, where I’m also building <strong className={textWhite}>CampusNode</strong>, a platform that brings college events, clubs, announcements, and resources into one place. Alongside engineering, I work across product development, design, and software to turn ideas into working products.
+</p>
 
-          <p className="animate-blur-fade fade-delay-2">
-            I believe good products start with paying attention to problems people have simply learned to live with.
-          </p>
+<p className="animate-blur-fade fade-delay-2">
+  I believe good products start with paying attention to problems people have simply learned to live with.
+</p>
 
-          <p className="animate-blur-fade fade-delay-3">
+
+          <p className={`animate-blur-fade fade-delay-3 ${hoveredEntity === "films" || hoveredEntity === "music" ? "relative z-50" : ""}`}>
             Off the clock, I play cricket ( Bowling ), watch{" "}
             <span
-              className="relative inline-block"
+              className={`relative inline-block ${hoveredEntity === "films" ? "z-50" : ""}`}
               data-popup-container="films"
               onMouseEnter={() => !isTouchDevice && setHoveredEntity("films")}
               onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
@@ -559,13 +561,13 @@ export default function Home() {
                   }}
                   className={`absolute ${
                     isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
-                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                  } -translate-x-1/2 z-[100] block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
                 >
                   <div
                     className={`p-3 rounded-lg border shadow-2xl w-[min(240px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left ${
                       isDark
                         ? "bg-[#141414] border-neutral-800 text-white"
-                        : "bg-white border-neutral-300 text-neutral-900"
+                        : "bg-white border-neutral-300 text-neutral-900 shadow-xl"
                     }`}
                   >
                     <p
@@ -589,7 +591,7 @@ export default function Home() {
             </span>{" "}
             and listen to{" "}
             <span
-              className="relative inline-block"
+              className={`relative inline-block ${hoveredEntity === "music" ? "z-50" : ""}`}
               data-popup-container="music"
               onMouseEnter={() => !isTouchDevice && setHoveredEntity("music")}
               onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
@@ -617,7 +619,7 @@ export default function Home() {
                   }}
                   className={`absolute ${
                     isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
-                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                  } -translate-x-1/2 z-[100] block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
                 >
                   <a
                     href={trackData.url || "https://www.last.fm/user/nikhil0148"}
@@ -626,7 +628,7 @@ export default function Home() {
                     className={`group flex items-center gap-3.5 p-3 pr-5 rounded-2xl border shadow-2xl w-[min(310px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left cursor-pointer transition-all duration-200 block ${
                       isDark
                         ? "bg-[#1a1a1a] border-[#464646] hover:border-[#6b6b6b] text-[#ffffff]"
-                        : "bg-white border-neutral-200/90 hover:border-neutral-300 text-neutral-900"
+                        : "bg-white border-neutral-200/90 hover:border-neutral-300 text-neutral-900 shadow-xl"
                     }`}
                   >
                     {/* Red spinning vinyl record with grooved texture and diamond album art */}
@@ -674,10 +676,10 @@ export default function Home() {
             .
           </p>
 
-          <p className="animate-blur-fade fade-delay-3">
+          <p className={`animate-blur-fade fade-delay-3 ${hoveredEntity === "twitter" || hoveredEntity === "github" ? "relative z-50" : ""}`}>
             Reach me at{" "}
             <span
-              className="relative inline-block"
+              className={`relative inline-block ${hoveredEntity === "twitter" ? "z-50" : ""}`}
               data-popup-container="twitter"
               onMouseEnter={() => !isTouchDevice && setHoveredEntity("twitter")}
               onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
@@ -705,14 +707,14 @@ export default function Home() {
                   }}
                   className={`absolute ${
                     isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
-                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                  } -translate-x-1/2 z-[100] block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
                 >
                   <a
                     href="https://twitter.com/nikhil0148"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`p-4 rounded-2xl border shadow-2xl w-[min(280px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left block cursor-pointer transition-colors ${
-                      isDark ? "bg-[#1a1a1a] border-[#464646] hover:border-[#6b6b6b] text-[#ffffff]" : "bg-white border-neutral-200/90 hover:border-neutral-300 text-neutral-900"
+                      isDark ? "bg-[#1a1a1a] border-[#464646] hover:border-[#6b6b6b] text-[#ffffff]" : "bg-white border-neutral-200/90 hover:border-neutral-300 text-neutral-900 shadow-xl"
                     }`}
                   >
                     {/* Avatar */}
@@ -763,7 +765,7 @@ export default function Home() {
             </a>
             , or on{" "}
             <span
-              className="relative inline-block"
+              className={`relative inline-block ${hoveredEntity === "github" ? "z-50" : ""}`}
               data-popup-container="github"
               onMouseEnter={() => !isTouchDevice && setHoveredEntity("github")}
               onMouseLeave={() => !isTouchDevice && setHoveredEntity(null)}
@@ -791,11 +793,11 @@ export default function Home() {
                   }}
                   className={`absolute ${
                     isFlippedY ? "top-full pt-3.5" : "bottom-full pb-3.5"
-                  } -translate-x-1/2 z-50 block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
+                  } -translate-x-1/2 z-[100] block animate-in fade-in zoom-in-95 duration-150 pointer-events-auto max-w-[calc(100vw-32px)]`}
                 >
                   <div
                     className={`p-3.5 rounded-2xl border shadow-2xl w-[min(370px,calc(100vw-32px))] max-w-[calc(100vw-32px)] text-left ${
-                      isDark ? "bg-[#1a1a1a] border-[#464646] text-[#ffffff]" : "bg-white border-neutral-200/90 text-black"
+                      isDark ? "bg-[#1a1a1a] border-[#464646] text-[#ffffff]" : "bg-white border-neutral-200/90 text-black shadow-xl"
                     }`}
                   >
                     {/* Top Calendar Heatmap */}
@@ -985,7 +987,7 @@ export default function Home() {
             </span>
             <button
               onClick={() => setShowContactForm(!showContactForm)}
-              className={`text-xs ${textWhite} hover:text-[#3b82f6] underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#ffffff] cursor-pointer transition-colors`}
+              className={`text-xs ${textWhite} hover:text-[#3b82f6] underline underline-offset-4 decoration-[#6b6b6b] hover:decoration-[#3b82f6] cursor-pointer transition-colors`}
             >
               {showContactForm ? "Hide form" : "Leave a note"}
             </button>
@@ -999,18 +1001,22 @@ export default function Home() {
                   name="name"
                   placeholder="Your Name"
                   required
-                  className={`w-full px-3 py-2 text-xs rounded border ${
-                    isDark ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff]" : "border-neutral-300 bg-white text-black"
-                  } placeholder-[#dedede66] outline-none focus:border-[#3b82f6]`}
+                  className={`w-full px-3 py-2 text-xs rounded border transition-colors outline-none focus:border-[#3b82f6] ${
+                    isDark
+                      ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff] placeholder-[#dedede66]"
+                      : "border-neutral-300 bg-white text-black placeholder-neutral-400"
+                  } dark:border-[#464646] dark:bg-[#1a1a1a] dark:text-[#ffffff] dark:placeholder-[#dedede66]`}
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="Your Email"
                   required
-                  className={`w-full px-3 py-2 text-xs rounded border ${
-                    isDark ? "border-[#464646] bg-[#1a1a1a] text-[#575757]" : "border-neutral-300 bg-white text-black"
-                  } placeholder-[#dedede66] outline-none focus:border-[#3b82f6]`}
+                  className={`w-full px-3 py-2 text-xs rounded border transition-colors outline-none focus:border-[#3b82f6] ${
+                    isDark
+                      ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff] placeholder-[#dedede66]"
+                      : "border-neutral-300 bg-white text-black placeholder-neutral-400"
+                  } dark:border-[#464646] dark:bg-[#1a1a1a] dark:text-[#ffffff] dark:placeholder-[#dedede66]`}
                 />
               </div>
               <textarea
@@ -1018,20 +1024,30 @@ export default function Home() {
                 rows="3"
                 placeholder="What are you building or inquiring about?"
                 required
-                className={`w-full px-3 py-2 text-xs rounded border ${
-                  isDark ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff]" : "border-neutral-300 bg-white text-black"
-                } placeholder-[#dedede66] outline-none focus:border-[#3b82f6] resize-none`}
+                className={`w-full px-3 py-2 text-xs rounded border transition-colors outline-none focus:border-[#3b82f6] resize-none ${
+                  isDark
+                    ? "border-[#464646] bg-[#1a1a1a] text-[#ffffff] placeholder-[#dedede66]"
+                    : "border-neutral-300 bg-white text-black placeholder-neutral-400"
+                } dark:border-[#464646] dark:bg-[#1a1a1a] dark:text-[#ffffff] dark:placeholder-[#dedede66]`}
               ></textarea>
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
                   disabled={contactStatus === "loading"}
-                  className="px-4 py-2 rounded text-xs font-semibold bg-[#3b82f6] text-[#ffffff] hover:opacity-90 transition-opacity cursor-pointer"
+                  className="px-4 py-2 rounded text-xs font-semibold bg-[#3b82f6] text-[#ffffff] hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
                 >
                   {contactStatus === "loading" ? "Sending..." : "Send Message"}
                 </button>
                 {contactResult && (
-                  <span className={`text-xs ${textSecondary}`}>
+                  <span
+                    className={`text-xs ${
+                      contactStatus === "error"
+                        ? "text-red-500 dark:text-red-400"
+                        : contactStatus === "success"
+                        ? "text-emerald-500 dark:text-emerald-400"
+                        : textSecondary
+                    }`}
+                  >
                     {contactResult}
                   </span>
                 )}
@@ -1048,18 +1064,16 @@ export default function Home() {
           <span className="sr-only">ASCII portrait of Nikhil Yadav</span>
 
          
-          <div className="w-full max-w-full overflow-x-auto rounded-xl border border-[#464646]/30 dark:border-[#464646]/50 p-2 sm:p-4 bg-neutral-500/[0.02] dark:bg-white/[0.01]">
+          <div className="w-full max-w-full overflow-hidden rounded-xl border border-[#464646]/30 dark:border-[#464646]/50 p-2 sm:p-4 bg-neutral-500/[0.02] dark:bg-white/[0.01] flex justify-center items-center">
             <pre
               style={{ fontFamily: "monospace" }}
-              className={`m-0 w-max max-w-none whitespace-pre font-mono tracking-normal leading-none text-[6px] ${textTertiary} hover:${textWhite} transition-colors duration-300 cursor-default`}
+              className={`m-0 whitespace-pre font-mono tracking-normal leading-none text-[3.2px] sm:text-[4.2px] md:text-[4.5px] ${textTertiary} hover:${textWhite} transition-colors duration-300 cursor-default select-none text-center`}
             >
               {asciiPortrait}
             </pre>
           </div>
 
-          <div className={`mt-3 font-mono text-[9px] sm:text-[10px] ${textTertiary} opacity-60 self-center`}>
-            Nikhil Yadav
-          </div>
+        
         </section>
 
         {/* SUBTLE MINIMAL FOOTER */}
