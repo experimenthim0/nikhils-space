@@ -12,7 +12,7 @@ import {
 import "../App.css";
 import asciiPortrait from "../assets/nikhil-yadav-ascii.txt?raw";
 
-export default function Home() {
+export default function Home({ onReplayIntro }) {
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem("theme");
     if (saved) return saved === "dark";
@@ -1079,6 +1079,17 @@ export default function Home() {
         {/* SUBTLE MINIMAL FOOTER */}
         <footer className={`mt-14 pt-6 border-t ${borderColor} text-xs ${textTertiary} flex items-center justify-between`}>
           <span>© 2026 NIKHIM</span>
+          {onReplayIntro && (
+            <button
+              onClick={onReplayIntro}
+              type="button"
+              className="hover:text-neutral-400 dark:hover:text-neutral-200 transition-colors cursor-pointer flex items-center gap-1.5 font-mono text-[11px]"
+              title="Replay autograph animation"
+            >
+              <span className="opacity-70">✍</span>
+              <span>Replay Autograph</span>
+            </button>
+          )}
           <span>303804</span>
         </footer>
       </div>
